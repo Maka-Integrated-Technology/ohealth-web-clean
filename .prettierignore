@@ -1,0 +1,20 @@
+# dependencies
+node_modules
+
+# build / cache
+.next
+out
+build
+.turbo
+coverage
+
+# generated
+next-env.d.ts
+
+# lockfiles (avoid churn)
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# assets (optional: remove lines to format)
+public
