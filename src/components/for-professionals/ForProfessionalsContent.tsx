@@ -49,7 +49,7 @@ export function ForProfessionalsContent() {
         desktopCols={3}
       />
 
-      <PromoSection ctaHref="/contact" ctaLabel="Get in touch" />
+      <PromoSection ctaHref="/contact" ctaLabel="Get Started as a Provider" />
 
       <MarketingCtaBandSection
         title="Start Growing Your Practice Today"
