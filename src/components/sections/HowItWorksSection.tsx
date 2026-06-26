@@ -75,8 +75,7 @@ export function HowItWorksSection({
               height={640}
               unoptimized
               className={
-                backgroundImageClassName ??
-                'h-auto w-[300px] sm:w-[360px] md:w-[400px] lg:w-[400px]'
+                backgroundImageClassName ?? 'h-auto w-75 sm:w-90 md:w-100 lg:w-100'
               }
               style={{ height: 'auto' }}
             />
