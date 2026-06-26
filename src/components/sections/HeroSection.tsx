@@ -30,7 +30,7 @@ function HomeHeroTitle() {
           Accessible
         </span>
       </span>
-      , Secure, and Connected.
+      , Secure, And Connected.
     </h1>
   );
 }
@@ -163,7 +163,7 @@ function HeroPreviewImage({
         className={cn(
           'relative mx-auto w-full',
           variant === 'home'
-            ? 'max-w-[717px]'
+            ? 'max-w-179.25'
             : 'max-w-68 min-[360px]:max-w-80 min-[380px]:max-w-82 min-[400px]:max-w-94 sm:max-w-none bg-brand-gray-100 rounded-t-3xl px-2 pt-2 lg:px-3 lg:pt-3 xl:px-6 xl:pt-6',
           image.imageClassName,
         )}>
