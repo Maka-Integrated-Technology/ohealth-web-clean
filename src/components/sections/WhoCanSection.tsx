@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { ScrollReveal } from '@/components/motion/scroll-reveal';
 import { images } from '@/lib/images';
+import { brandName } from '@/lib/constants/seo';
 
 type WhoCanItem = {
   title: string;
@@ -61,7 +62,7 @@ export function WhoCanSection({
           className="relative h-auto w-full md:w-auto">
           <Image
             src={images.whoItsFor}
-            alt="OHealth+ app on mobile"
+            alt={`${brandName} app on mobile`}
             width={522}
             height={642}
             className="h-auto w-full max-w-[522px] object-contain"

@@ -1,5 +1,6 @@
 import type { VariantProps } from 'class-variance-authority';
 import type { buttonVariants } from '@/components/ui/button-variants';
+import { brandName } from '@/lib/constants/seo';
 
 type MarketingButtonSize = Extract<
   VariantProps<typeof buttonVariants>['size'],
@@ -34,8 +35,7 @@ export type HeroContent = {
 
 export const homeHero: HeroContent = {
   headingMaxWidthClass: 'xl:max-w-212',
-  description:
-    'OHealth+ is a digital healthcare platform that connects you with verified healthcare professionals, lets you book consultations and lab tests online, and securely manage all your health records in one place.',
+  description: `${brandName} is a digital healthcare platform that connects you with verified healthcare professionals, lets you book consultations and lab tests online, and securely manage all your health records in one place.`,
   ctas: [
     {
       label: 'Get App',
@@ -62,8 +62,7 @@ export const homeHero: HeroContent = {
 
 export const professionalsHero: HeroContent = {
   headingMaxWidthClass: 'xl:max-w-209',
-  description:
-    'OHealth+ helps healthcare professionals connect with patients, manage consultations, and deliver care more efficiently through a secure, easy-to-use web platform.',
+  description: `${brandName} helps healthcare professionals connect with patients, manage consultations, and deliver care more efficiently through a secure, easy-to-use web platform.`,
   ctas: [
     {
       label: 'Join as a Professional',

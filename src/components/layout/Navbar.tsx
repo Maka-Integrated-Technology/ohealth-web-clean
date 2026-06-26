@@ -3,6 +3,7 @@ import Image from 'next/image';
 
 import { NavbarDesktopNav } from '@/components/layout/NavbarDesktopNav';
 import { NavbarMobileMenu } from '@/components/layout/NavbarMobileMenu';
+import { brandName } from '@/lib/constants/seo';
 
 export function Navbar() {
   return (
@@ -13,14 +14,14 @@ export function Navbar() {
         <Link href="/" className="flex items-center gap-1">
           <Image
             src="/icons/logo.svg"
-            alt="OHealth+ logo"
+            alt={`${brandName} logo`}
             width={24}
             height={24}
             className="h-6 w-6"
             unoptimized
           />
           <p className="text-base font-semibold text-brand-black-800 tracking-[-0.8px] leading-[110%]">
-            OHealth+
+            {brandName}
           </p>
         </Link>
 

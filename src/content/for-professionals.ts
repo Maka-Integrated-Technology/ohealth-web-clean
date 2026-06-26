@@ -1,3 +1,5 @@
+import { brandName } from '@/lib/constants/seo';
+
 export type ProStep = {
   n: number;
   title: string;
@@ -24,7 +26,7 @@ export const proSteps: ProStep[] = [
   {
     n: 1,
     title: 'Create an Account',
-    body: 'Sign up on the OHealth+ web platform and set up your professional profile.',
+    body: `Sign up on the ${brandName} web platform and set up your professional profile.`,
     tone: 'blue',
   },
   {

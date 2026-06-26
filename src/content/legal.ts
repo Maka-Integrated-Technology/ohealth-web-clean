@@ -1,3 +1,5 @@
+import { brandName } from '@/lib/constants/seo';
+
 export type PolicyBlock = {
   id?: string;
   number: number;
@@ -10,21 +12,21 @@ export const termsSections: PolicyBlock[] = [
     number: 1,
     title: 'Acceptance of Terms',
     paragraphs: [
-      'By accessing and using OHealth+, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to these terms, please do not use our services.',
+      `By accessing and using ${brandName}, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to these terms, please do not use our services.`,
     ],
   },
   {
     number: 2,
     title: 'Use of Services',
     paragraphs: [
-      'OHealth+ provides a platform to connect patients with healthcare professionals. You agree to use our services only for lawful purposes and in accordance with these Terms. You are responsible for maintaining the confidentiality of your account information.',
+      `${brandName} provides a platform to connect patients with healthcare professionals. You agree to use our services only for lawful purposes and in accordance with these Terms. You are responsible for maintaining the confidentiality of your account information.`,
     ],
   },
   {
     number: 3,
     title: 'Medical Disclaimer',
     paragraphs: [
-      'OHealth+ is not a healthcare provider. The platform facilitates connections between patients and licensed healthcare professionals. Any medical advice, diagnosis, or treatment you receive is provided by independent healthcare professionals, not by OHealth+.',
+      `${brandName} is not a healthcare provider. The platform facilitates connections between patients and licensed healthcare professionals. Any medical advice, diagnosis, or treatment you receive is provided by independent healthcare professionals, not by ${brandName}.`,
     ],
   },
   {
@@ -45,14 +47,14 @@ export const termsSections: PolicyBlock[] = [
     number: 6,
     title: 'Payment Terms',
     paragraphs: [
-      'You agree to pay all fees associated with your use of OHealth+ services. Payment is due at the time of service unless otherwise arranged. We accept various payment methods as displayed in the app.',
+      `You agree to pay all fees associated with your use of ${brandName} services. Payment is due at the time of service unless otherwise arranged. We accept various payment methods as displayed in the app.`,
     ],
   },
   {
     number: 7,
     title: 'Limitation of Liability',
     paragraphs: [
-      'OHealth+ shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use or inability to use the service, or for the cost of procurement of substitute services.',
+      `${brandName} shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use or inability to use the service, or for the cost of procurement of substitute services.`,
     ],
   },
   {
@@ -98,7 +100,7 @@ export const privacySections: PolicyBlock[] = [
     number: 5,
     title: 'HIPAA Compliance',
     paragraphs: [
-      'OHealth+ is committed to complying with the Health Insurance Portability and Accountability Act (HIPAA). Your protected health information is handled in accordance with HIPAA privacy and security rules.',
+      `${brandName} is committed to complying with the Health Insurance Portability and Accountability Act (HIPAA). Your protected health information is handled in accordance with HIPAA privacy and security rules.`,
     ],
   },
   {

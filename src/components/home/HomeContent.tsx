@@ -7,6 +7,7 @@ import { HowItWorksSection } from '../sections/HowItWorksSection';
 import { WhatDoesSection } from '../sections/WhatDoesSection';
 import { homeSteps, trustedCards, whatDoesCards, whoItsForItems } from '@/content/home';
 import { getAppCtaHref } from '@/lib/constants/external-links';
+import { brandName } from '@/lib/constants/seo';
 
 export function HomeContent() {
   return (
@@ -15,16 +16,16 @@ export function HomeContent() {
         <HeroSection variant="home" />
 
         <WhatDoesSection
-          eyebrow="What OHealth+ Does"
+          eyebrow={`What ${brandName} Does`}
           title="Everything You Need to Manage Your Health In One Platform"
-          description="OHealth+ brings healthcare services together so you can access care, diagnostics, and your health data without stress or unnecessary hospital visits."
+          description={`${brandName} brings healthcare services together so you can access care, diagnostics, and your health data without stress or unnecessary hospital visits.`}
           cards={whatDoesCards}
           cardClassName="pb-0"
           gridClassName="md:grid-cols-2 xl:grid-cols-3"
         />
 
         <HowItWorksSection
-          title="How OHealth+ Works"
+          title={`How ${brandName} Works`}
           description="Create an account, connect with verified professionals, book consultations or lab tests, and manage your health data-all in one seamless experience."
           steps={homeSteps}
           headingWrapClassName="mx-auto max-w-181 text-center"
@@ -59,11 +60,13 @@ export function HomeContent() {
         title={
           <>
             Get started with{' '}
-            <span className="font-serif font-medium italic text-[#f5b179]">OHealth+</span>{' '}
+            <span className="font-serif font-medium italic text-[#f5b179]">
+              {brandName}
+            </span>{' '}
             today
           </>
         }
-        description="Whether you are seeking care or providing it, OHealth+ makes healthcare more accessible, efficient, and connected."
+        description={`Whether you are seeking care or providing it, ${brandName} makes healthcare more accessible, efficient, and connected.`}
         primaryCtaLabel="Create a free account"
         primaryCtaHref={getAppCtaHref()}
         secondaryCtaLabel="Join as a professional"

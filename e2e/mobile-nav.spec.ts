@@ -1,11 +1,14 @@
 import { expect, test } from '@playwright/test';
+import { altBrandName } from '@/lib/constants/seo';
 
 test.describe('Mobile navigation', () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    await page.evaluate(() => sessionStorage.setItem('ohealth-splash-seen', '1'));
+    await page.evaluate(() =>
+      sessionStorage.setItem(`${altBrandName.toLowerCase()}-splash-seen`, '1'),
+    );
     await page.reload();
   });
 
