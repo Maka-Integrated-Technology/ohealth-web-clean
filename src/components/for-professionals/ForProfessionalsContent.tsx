@@ -28,7 +28,7 @@ export function ForProfessionalsContent() {
         />
 
         <HowItWorksSection
-          title="Get started"
+          title="Get Started"
           description="Start using OHealth+ in just a few steps and begin connecting with patients seamlessly."
           steps={proSteps}
         />
