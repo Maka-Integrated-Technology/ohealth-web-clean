@@ -28,7 +28,7 @@ export function ForProfessionalsContent() {
         />
 
         <HowItWorksSection
-          title="Get started"
+          title="Get Started"
           description="Start using OHealth+ in just a few steps and begin connecting with patients seamlessly."
           steps={proSteps}
         />
@@ -49,7 +49,7 @@ export function ForProfessionalsContent() {
         desktopCols={3}
       />
 
-      <PromoSection ctaHref="/contact" ctaLabel="Get in touch" />
+      <PromoSection ctaHref="/contact" ctaLabel="Get Started as a Provider" />
 
       <MarketingCtaBandSection
         title="Start Growing Your Practice Today"
