@@ -7,11 +7,12 @@ import {
   openGraphHomeRootStyle,
   openGraphHomeSubheadStyle,
 } from '@/lib/og/opengraph-home.styles';
+import { brandName } from '@/lib/constants/seo';
 
 export default function OpenGraphHomeImage() {
   return new ImageResponse(
     <div style={openGraphHomeRootStyle}>
-      <div style={openGraphHomeBrandStyle}>OHealth+</div>
+      <div style={openGraphHomeBrandStyle}>{brandName}</div>
       <div style={openGraphHomeHeadlineStyle}>
         Healthcare made accessible, secure, and connected
       </div>

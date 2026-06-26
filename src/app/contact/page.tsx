@@ -4,12 +4,12 @@ import { SupportCardGrid } from '@/components/contact/SupportCardGrid';
 import { ScrollReveal } from '@/components/motion/scroll-reveal';
 import { MarketingDocHero } from '@/components/marketing/MarketingDocHero';
 import { buildPageMetadata } from '@/lib/constants/seo';
+import { brandName } from '@/lib/constants/seo';
 
 export const metadata = buildPageMetadata({
   title: 'Contact',
   path: '/contact',
-  description:
-    'Get in touch with the OHealth+ team for support, partnerships, or general inquiries.',
+  description: `Get in touch with the ${brandName} team for support, partnerships, or general inquiries.`,
 });
 
 export default function ContactPage() {

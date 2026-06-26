@@ -5,6 +5,7 @@ import {
   ScrollRevealItem,
 } from '@/components/motion/scroll-reveal';
 import { Card, CardContent } from '@/components/ui/card';
+import { brandName } from '@/lib/constants/seo';
 import { cn } from '@/lib/utils';
 
 type Step = {
@@ -70,7 +71,7 @@ export function HowItWorksSection({
             aria-hidden>
             <Image
               src={backgroundImageSrc}
-              alt="How OHealth+ works"
+              alt={`How ${brandName} works`}
               width={400}
               height={640}
               unoptimized

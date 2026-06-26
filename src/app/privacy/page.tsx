@@ -3,12 +3,12 @@ import { MarketingDocHero } from '@/components/marketing/MarketingDocHero';
 import { PolicyBody } from '@/components/marketing/PolicyBody';
 import { privacySections } from '@/content/legal';
 import { buildPageMetadata } from '@/lib/constants/seo';
+import { brandName } from '@/lib/constants/seo';
 
 export const metadata = buildPageMetadata({
   title: 'Privacy policy',
   path: '/privacy',
-  description:
-    'How OHealth+ collects, uses, and protects your personal and health information.',
+  description: `How ${brandName} collects, uses, and protects your personal and health information.`,
 });
 
 export default function PrivacyPage() {

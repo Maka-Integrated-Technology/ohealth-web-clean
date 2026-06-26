@@ -1,3 +1,5 @@
+import { brandName } from '@/lib/constants/seo';
+
 export const CONTACT_SUPPORT_EMAIL = 'support@ohealthltd.com';
 
 export type SupportCard = {
@@ -24,15 +26,13 @@ export const supportCards: SupportCard[] = [
   },
   {
     title: 'General Inquiries',
-    description:
-      'For general questions about OHealth+, our services, or how the platform works.',
+    description: `For general questions about ${brandName}, our services, or how the platform works.`,
     href: 'mailto:info@ohealthltd.com',
     linkLabel: 'info@ohealthltd.com',
   },
   {
     title: 'Check Our FAQs First',
-    description:
-      'Take a look at our FAQs. It’s the fastest way to find answers to common questions about OHealth.',
+    description: `Take a look at our FAQs. It’s the fastest way to find answers to common questions about ${brandName}.`,
     href: '/faq',
     linkLabel: 'Go to FAQs',
   },

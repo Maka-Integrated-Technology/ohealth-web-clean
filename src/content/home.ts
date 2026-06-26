@@ -1,3 +1,5 @@
+import { brandName } from '@/lib/constants/seo';
+
 export type HomeStep = {
   n: number;
   title: string;
@@ -107,8 +109,7 @@ export const trustedCards: HomeTrustedCard[] = [
   },
   {
     title: 'Privacy & Compliance',
-    description:
-      'OHealth+ is built with patient confidentiality and regulatory compliance at its core.',
+    description: `${brandName} is built with patient confidentiality and regulatory compliance at its core.`,
     iconSrc: '/icons/security-user.svg',
   },
   {

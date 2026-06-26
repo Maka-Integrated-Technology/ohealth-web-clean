@@ -1,7 +1,8 @@
 import type { ContactMessageInput } from '@/lib/contact/contact-message';
+import { brandName } from '@/lib/constants/seo';
 
 /** Inline mark from `src/app/icon.svg` — heart + plus gradient */
-const OHEALTH_LOGO_SVG = `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="OHealth+"><path d="M19.4626 3.99354C16.7809 2.34862 14.4404 3.0115 13.0344 4.0674C12.4578 4.50035 12.1696 4.71682 12 4.71682C11.8304 4.71682 11.5422 4.50035 10.9656 4.0674C9.55962 3.0115 7.21909 2.34862 4.53744 3.99354C1.01807 6.15232 0.221718 13.2742 8.33953 19.2827C9.88572 20.4272 10.6588 20.9994 12 20.9994C13.3412 20.9994 14.1143 20.4272 15.6605 19.2827C23.7783 13.2742 22.9819 6.15232 19.4626 3.99354Z" fill="url(#paint0_linear_contact_email)"/><path d="M12 9V15M9 12H15" stroke="#D1E0FF" stroke-width="1.5" stroke-linecap="round"/><defs><linearGradient id="paint0_linear_contact_email" x1="2" y1="11.9994" x2="22" y2="11.9994" gradientUnits="userSpaceOnUse"><stop stop-color="#063595"/><stop offset="1" stop-color="#254991"/></linearGradient></defs></svg>`;
+const BRAND_LOGO_SVG = `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${brandName}"><path d="M19.4626 3.99354C16.7809 2.34862 14.4404 3.0115 13.0344 4.0674C12.4578 4.50035 12.1696 4.71682 12 4.71682C11.8304 4.71682 11.5422 4.50035 10.9656 4.0674C9.55962 3.0115 7.21909 2.34862 4.53744 3.99354C1.01807 6.15232 0.221718 13.2742 8.33953 19.2827C9.88572 20.4272 10.6588 20.9994 12 20.9994C13.3412 20.9994 14.1143 20.4272 15.6605 19.2827C23.7783 13.2742 22.9819 6.15232 19.4626 3.99354Z" fill="url(#paint0_linear_contact_email)"/><path d="M12 9V15M9 12H15" stroke="#D1E0FF" stroke-width="1.5" stroke-linecap="round"/><defs><linearGradient id="paint0_linear_contact_email" x1="2" y1="11.9994" x2="22" y2="11.9994" gradientUnits="userSpaceOnUse"><stop stop-color="#063595"/><stop offset="1" stop-color="#254991"/></linearGradient></defs></svg>`;
 
 const BRAND_BLUE = '#063595';
 const BRAND_BLUE_DARK = '#254991';
@@ -33,7 +34,7 @@ export function buildContactEmailHtml(input: ContactMessageInput): string {
   const safeName = escapeHtml(input.fullName);
   const safeEmail = escapeHtml(input.email);
   const safeMessage = escapeHtml(input.message).replace(/\n/g, '<br />');
-  const replyHref = `mailto:${encodeURIComponent(input.email)}?subject=${encodeURIComponent(`Re: Your OHealth+ inquiry`)}`;
+  const replyHref = `mailto:${encodeURIComponent(input.email)}?subject=${encodeURIComponent(`Re: Your ${brandName} inquiry`)}`;
 
   const professionRow = input.profession ? fieldRow('Profession', input.profession) : '';
 
@@ -54,9 +55,9 @@ export function buildContactEmailHtml(input: ContactMessageInput): string {
             <td align="center" style="padding:32px 24px 24px 24px;">
               <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                 <tr>
-                  <td valign="middle" style="padding-right:8px;line-height:0;">${OHEALTH_LOGO_SVG}</td>
+                  <td valign="middle" style="padding-right:8px;line-height:0;">${BRAND_LOGO_SVG}</td>
                   <td valign="middle" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:22px;font-weight:700;line-height:1.1;letter-spacing:-0.8px;color:${TEXT_PRIMARY};">
-                    OHealth<span style="color:${BRAND_BLUE};">+</span>
+                    ${brandName}<span style="color:${BRAND_BLUE};">+</span>
                   </td>
                 </tr>
               </table>
@@ -84,7 +85,7 @@ export function buildContactEmailHtml(input: ContactMessageInput): string {
                       Hello,
                     </p>
                     <p style="margin:0 0 24px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.6;font-weight:500;color:${TEXT_PRIMARY};">
-                      Someone reached out through the OHealth+ contact form. Here are the details:
+                      Someone reached out through the ${brandName} contact form. Here are the details:
                     </p>
                     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:24px;">
                       ${fieldRow('Name', input.fullName)}
@@ -111,7 +112,7 @@ export function buildContactEmailHtml(input: ContactMessageInput): string {
                     </p>
                     <p style="margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.5;font-weight:600;color:${TEXT_PRIMARY};">
                       Stay healthy,<br />
-                      OHealth+ Team
+                      ${brandName} Team
                     </p>
                   </td>
                 </tr>
