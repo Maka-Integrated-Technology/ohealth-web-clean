@@ -52,7 +52,7 @@ export const whoCanItems: ProWhoCanItem[] = [
   { title: 'Nurses' },
   { title: 'Therapists' },
   { title: 'Nutritionists' },
-  { title: 'Hospitals, Pharmacies, and Laboratories' },
+  { title: 'Hospitals, Pharmacies, Laboratories' },
   { title: 'Other certified healthcare specialists' },
 ];
 
