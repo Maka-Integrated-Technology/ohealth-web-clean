@@ -73,7 +73,8 @@ export function Footer() {
 
         <section className="flex flex-col-reverse items-center justify-between gap-4 border-t border-brand-neutral-200 pt-8 md:flex-row md:px-8">
           <p className="text-base text-brand-neutral-500" suppressHydrationWarning>
-            © {new Date().getFullYear()} OHealth+ Ltd. All rights reserved.
+            © {new Date().getFullYear()} MAKA Integrated Technology LTD. All rights
+            reserved.
           </p>
           {socialLinks.length > 0 ? <FooterSocialLinks links={socialLinks} /> : null}
         </section>

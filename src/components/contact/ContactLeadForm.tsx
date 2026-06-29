@@ -151,7 +151,7 @@ export function ContactLeadForm() {
           tabIndex={-1}
           autoComplete="off"
           aria-hidden
-          className="absolute left-[-9999px] h-0 w-0 opacity-0"
+          className="absolute -left-2499.75 h-0 w-0 opacity-0"
         />
         <div className="grid gap-6">
           <div className="grid gap-6 lg:grid-cols-2">
