@@ -64,7 +64,7 @@ export function WhoCanSection({
             alt="OHealth+ app on mobile"
             width={522}
             height={642}
-            className="h-auto w-full max-w-[522px] object-contain"
+            className="h-auto w-full max-w-130.5 object-contain"
             style={{ width: '100%', height: 'auto' }}
             sizes="(max-width: 768px) 100vw, 480px"
           />

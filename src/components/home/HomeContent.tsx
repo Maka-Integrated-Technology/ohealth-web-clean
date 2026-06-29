@@ -58,7 +58,7 @@ export function HomeContent() {
       <MarketingCtaBandSection
         title={
           <>
-            Get started with{' '}
+            Get Started with{' '}
             <span className="font-serif font-medium italic text-[#f5b179]">OHealth+</span>{' '}
             today
           </>
