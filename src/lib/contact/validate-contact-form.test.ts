@@ -27,6 +27,11 @@ describe('isValidContactEmail', () => {
     expect(isValidContactEmail('not-an-email')).toBe(false);
     expect(isValidContactEmail('a@b.c')).toBe(false);
   });
+
+  it('rejects addresses with a single-character local part', () => {
+    expect(isValidContactEmail('5@hreu.djhwdyu')).toBe(false);
+    expect(isValidContactEmail('a@b.cd')).toBe(false);
+  });
 });
 
 describe('isValidContactFullName', () => {
