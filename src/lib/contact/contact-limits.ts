@@ -3,6 +3,7 @@ export const CONTACT_FIELD_LIMITS = {
   email: 254,
   profession: 120,
   message: 5000,
+  messageMin: 10,
 } as const;
 
 /** Honeypot field — hidden from users; bots that fill it are rejected. */

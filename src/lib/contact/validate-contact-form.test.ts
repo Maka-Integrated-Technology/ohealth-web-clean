@@ -125,4 +125,19 @@ describe('validateContactForm', () => {
       expect(result.fieldErrors.message).toBeDefined();
     }
   });
+
+  it('rejects messages under the minimum length', () => {
+    const result = validateContactForm(
+      formData({
+        fullName: 'Jane Doe',
+        email: 'jane@example.com',
+        message: 'Hi',
+      }),
+    );
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.fieldErrors.message).toBe('Message must be at least 10 characters.');
+    }
+  });
 });
