@@ -10,8 +10,8 @@ export type ContactMessageInput = {
 const EMAIL_PATTERN =
   /^[a-zA-Z0-9._%+-]{2,}@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z]{2,})+$/;
 
-function withinLimit(value: string, max: number): boolean {
-  return value.length > 0 && value.length <= max;
+function withinLimit(value: string, max: number, min: number = 1): boolean {
+  return value.length >= min && value.length <= max;
 }
 
 export function isValidContactEmail(email: string): boolean {
@@ -56,7 +56,11 @@ export function parseContactFormData(formData: FormData): ContactMessageInput | 
 
   if (
     !withinLimit(trimmedName, CONTACT_FIELD_LIMITS.fullName) ||
-    !isValidContactFullName(trimmedName) ||
+    !withinLimit(
+      trimmedMessage,
+      CONTACT_FIELD_LIMITS.message,
+      CONTACT_FIELD_LIMITS.messageMin,
+    ) ||
     !withinLimit(trimmedMessage, CONTACT_FIELD_LIMITS.message) ||
     trimmedProfession.length > CONTACT_FIELD_LIMITS.profession ||
     !isValidContactEmail(trimmedEmail)

@@ -52,6 +52,8 @@ export function validateContactForm(formData: FormData): ValidateContactResult {
     fieldErrors.message = 'Message is required.';
   } else if (message.trim().length > CONTACT_FIELD_LIMITS.message) {
     fieldErrors.message = `Message must be ${CONTACT_FIELD_LIMITS.message} characters or fewer.`;
+  } else if (message.trim().length < CONTACT_FIELD_LIMITS.messageMin) {
+    fieldErrors.message = `Message must be at least ${CONTACT_FIELD_LIMITS.messageMin} characters.`;
   }
 
   if (Object.keys(fieldErrors).length > 0) {
