@@ -8,7 +8,7 @@ export type ContactMessageInput = {
 };
 
 const EMAIL_PATTERN =
-  /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z]{2,})+$/;
+  /^[a-zA-Z0-9._%+-]{2,}@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z]{2,})+$/;
 
 function withinLimit(value: string, max: number): boolean {
   return value.length > 0 && value.length <= max;
