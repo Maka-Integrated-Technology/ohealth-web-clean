@@ -20,18 +20,19 @@ export function isValidContactEmail(email: string): boolean {
 
 const FULL_NAME_MIN_LENGTH = 2;
 
-/**
- * Accepts mononyms, multi-part names, and common name punctuation (hyphens, apostrophes).
- * Requires at least one letter (any script) per whitespace-separated part.
- */
+const SPACELESS_NAME_SCRIPT = /[\u4e00-\u9fff\u3040-\u30ff\u30a0-\u30ff\uac00-\ud7af]/u;
+
 export function isValidContactFullName(fullName: string): boolean {
   const trimmed = fullName.trim();
   if (trimmed.length < FULL_NAME_MIN_LENGTH) return false;
 
-  const parts = trimmed.split(/\s+/).filter(part => part.length > 0);
-  if (parts.length === 0) return false;
+  const parts = trimmed.split(/[\s-]+/).filter(part => part.length > 0);
 
-  return parts.every(part => /\p{L}/u.test(part));
+  if (parts.length >= 2) {
+    return parts.every(part => /\p{L}/u.test(part));
+  }
+
+  return SPACELESS_NAME_SCRIPT.test(trimmed) && /^\p{L}+$/u.test(trimmed);
 }
 
 export function parseContactFormData(formData: FormData): ContactMessageInput | null {

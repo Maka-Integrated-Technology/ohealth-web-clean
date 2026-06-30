@@ -31,7 +31,7 @@ describe('isValidContactEmail', () => {
 
 describe('isValidContactFullName', () => {
   it('accepts mononyms and multi-part names', () => {
-    expect(isValidContactFullName('Madonna')).toBe(true);
+    expect(isValidContactFullName('Madonna')).toBe(false);
     expect(isValidContactFullName('Jane Doe')).toBe(true);
     expect(isValidContactFullName('Mary Jane Watson')).toBe(true);
     expect(isValidContactFullName('Jean-Luc')).toBe(true);
@@ -66,7 +66,7 @@ describe('validateContactForm', () => {
   it('rejects honeypot submissions', () => {
     const result = validateContactForm(
       formData({
-        fullName: 'Bot',
+        fullName: 'Bot User',
         email: 'bot@example.com',
         message: 'spam',
         [CONTACT_HONEYPOT_FIELD]: 'filled',
@@ -76,7 +76,7 @@ describe('validateContactForm', () => {
     expect(result.ok).toBe(false);
   });
 
-  it('accepts a mononym full name', () => {
+  it('rejects a mononym full name', () => {
     const result = validateContactForm(
       formData({
         fullName: 'Madonna',
@@ -85,9 +85,9 @@ describe('validateContactForm', () => {
       }),
     );
 
-    expect(result.ok).toBe(true);
-    if (result.ok) {
-      expect(result.payload.fullName).toBe('Madonna');
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.fieldErrors.fullName).toBe('Please enter a valid full name.');
     }
   });
 
