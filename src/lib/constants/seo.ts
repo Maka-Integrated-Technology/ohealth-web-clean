@@ -11,13 +11,16 @@ export function getSiteUrl(): string {
 
 const siteUrl = getSiteUrl();
 
+export const brandName = 'OHealth+';
+export const altBrandName = 'OHealth';
+export const companyName = 'MAKA Integrated Technology LTD';
+
 export const SEO_DETAILS = {
   title: {
-    default: 'OHealth+ — Accessible, secure, and connected healthcare',
-    template: '%s | OHealth+',
+    default: `${brandName} — Accessible, secure, and connected healthcare`,
+    template: `%s | ${brandName}`,
   },
-  description:
-    'OHealth+ is a digital healthcare platform that connects you with verified healthcare professionals, lets you book consultations and lab tests online, and helps you manage health records securely in one place.',
+  description: `${brandName} is a digital healthcare platform that connects you with verified healthcare professionals, lets you book consultations and lab tests online, and helps you manage health records securely in one place.`,
   metadataBase: new URL(siteUrl),
   icons: {
     icon: [{ url: '/icon.svg', type: 'image/svg+xml' }],
@@ -34,12 +37,13 @@ export const SEO_DETAILS = {
       'max-snippet': -1,
     },
   },
-  authors: [{ name: 'OHealth+ Ltd', url: siteUrl }],
+  authors: [{ name: companyName, url: siteUrl }],
   keywords: [
-    'OHealth',
-    'OHealth+',
+    brandName,
+    altBrandName,
     'digital healthcare',
     'telehealth',
+    'telemedicine',
     'online doctor',
     'health records',
     'lab tests',
@@ -49,9 +53,9 @@ export const SEO_DETAILS = {
     'medical appointments',
   ],
   generator: 'Next.js',
-  publisher: 'OHealth+ Ltd',
+  publisher: companyName,
   category: 'Healthcare',
-  applicationName: 'OHealth+',
+  applicationName: brandName,
 } satisfies Omit<Metadata, 'openGraph' | 'twitter' | 'alternates'>;
 
 export const siteOpenGraphImage = '/opengraph-image';
@@ -60,7 +64,7 @@ export function buildRootMetadata(): Metadata {
   const title =
     typeof SEO_DETAILS.title === 'object' && SEO_DETAILS.title !== null
       ? SEO_DETAILS.title.default
-      : 'OHealth+';
+      : brandName;
 
   return {
     ...SEO_DETAILS,
@@ -69,9 +73,9 @@ export function buildRootMetadata(): Metadata {
       description: SEO_DETAILS.description,
       type: 'website',
       url: SEO_DETAILS.metadataBase,
-      siteName: 'OHealth+',
+      siteName: brandName,
       locale: 'en_US',
-      images: [{ url: siteOpenGraphImage, width: 1200, height: 630, alt: 'OHealth+' }],
+      images: [{ url: siteOpenGraphImage, width: 1200, height: 630, alt: brandName }],
     },
     twitter: {
       card: 'summary_large_image',
@@ -101,17 +105,17 @@ export function buildPageMetadata({
     description,
     alternates: { canonical: path },
     openGraph: {
-      title: `${title} | OHealth+`,
+      title: `${title} | ${brandName}`,
       description,
       type: 'website',
       url: canonicalUrl,
-      siteName: 'OHealth+',
+      siteName: brandName,
       locale: 'en_US',
-      images: [{ url: siteOpenGraphImage, width: 1200, height: 630, alt: 'OHealth+' }],
+      images: [{ url: siteOpenGraphImage, width: 1200, height: 630, alt: brandName }],
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${title} | OHealth+`,
+      title: `${title} | ${brandName}`,
       description,
       images: [siteOpenGraphImage],
     },

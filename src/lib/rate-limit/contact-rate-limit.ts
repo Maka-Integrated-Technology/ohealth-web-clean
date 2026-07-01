@@ -1,5 +1,6 @@
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
+import { altBrandName } from '@/lib/constants/seo';
 
 const CONTACT_LIMIT = 5;
 const CONTACT_WINDOW = '1 h';
@@ -16,7 +17,7 @@ function getUpstashRatelimit(): Ratelimit | null {
   upstashRatelimit = new Ratelimit({
     redis: new Redis({ url, token }),
     limiter: Ratelimit.slidingWindow(CONTACT_LIMIT, CONTACT_WINDOW),
-    prefix: 'ohealth-contact',
+    prefix: `${altBrandName.toLowerCase()}-contact`,
   });
 
   return upstashRatelimit;

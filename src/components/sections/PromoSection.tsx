@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ScrollReveal } from '@/components/motion/scroll-reveal';
 import { Button } from '@/components/ui/button';
 import { images } from '@/lib/images';
+import { brandName } from '@/lib/constants/seo';
 
 type PromoSectionProps = {
   ctaHref?: string;
@@ -24,7 +25,7 @@ export function PromoSection({
           </p>
           <div className="mx-auto max-w-162.5">
             <h2 className="text-2xl font-semibold leading-[120%] text-brand-neutral-800 md:leading-none lg:text-[2.5rem]">
-              Grow Your Practice with OHealth+
+              Grow Your Practice with {brandName}
             </h2>
             <p className="mt-3 text-base leading-5.5 tracking-[-1%] text-brand-neutral-700 md:leading-[120%]">
               Join a trusted digital platform to reach more patients, manage your
