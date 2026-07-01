@@ -65,7 +65,7 @@ describe('submitContactForm', () => {
       formData({
         fullName: 'Jane Doe',
         email: 'jane@example.com',
-        message: 'Hello',
+        message: 'Hello team',
       }),
     );
 
@@ -90,7 +90,7 @@ describe('submitContactForm', () => {
       formData({
         fullName: 'Jane Doe',
         email: 'jane@example.com',
-        message: 'Hello',
+        message: 'Hello team',
       }),
     );
 
