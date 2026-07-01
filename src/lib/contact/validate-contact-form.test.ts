@@ -27,11 +27,16 @@ describe('isValidContactEmail', () => {
     expect(isValidContactEmail('not-an-email')).toBe(false);
     expect(isValidContactEmail('a@b.c')).toBe(false);
   });
+
+  it('rejects addresses with a single-character local part', () => {
+    expect(isValidContactEmail('5@hreu.djhwdyu')).toBe(false);
+    expect(isValidContactEmail('a@b.cd')).toBe(false);
+  });
 });
 
 describe('isValidContactFullName', () => {
   it('accepts mononyms and multi-part names', () => {
-    expect(isValidContactFullName('Madonna')).toBe(true);
+    expect(isValidContactFullName('Madonna')).toBe(false);
     expect(isValidContactFullName('Jane Doe')).toBe(true);
     expect(isValidContactFullName('Mary Jane Watson')).toBe(true);
     expect(isValidContactFullName('Jean-Luc')).toBe(true);
@@ -66,7 +71,7 @@ describe('validateContactForm', () => {
   it('rejects honeypot submissions', () => {
     const result = validateContactForm(
       formData({
-        fullName: 'Bot',
+        fullName: 'Bot User',
         email: 'bot@example.com',
         message: 'spam',
         [CONTACT_HONEYPOT_FIELD]: 'filled',
@@ -76,7 +81,7 @@ describe('validateContactForm', () => {
     expect(result.ok).toBe(false);
   });
 
-  it('accepts a mononym full name', () => {
+  it('rejects a mononym full name', () => {
     const result = validateContactForm(
       formData({
         fullName: 'Madonna',
@@ -85,9 +90,9 @@ describe('validateContactForm', () => {
       }),
     );
 
-    expect(result.ok).toBe(true);
-    if (result.ok) {
-      expect(result.payload.fullName).toBe('Madonna');
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.fieldErrors.fullName).toBe('Please enter a valid full name.');
     }
   });
 
@@ -118,6 +123,21 @@ describe('validateContactForm', () => {
     expect(result.ok).toBe(false);
     if (!result.ok) {
       expect(result.fieldErrors.message).toBeDefined();
+    }
+  });
+
+  it('rejects messages under the minimum length', () => {
+    const result = validateContactForm(
+      formData({
+        fullName: 'Jane Doe',
+        email: 'jane@example.com',
+        message: 'Hi',
+      }),
+    );
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.fieldErrors.message).toBe('Message must be at least 10 characters.');
     }
   });
 });
