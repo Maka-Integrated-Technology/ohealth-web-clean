@@ -5,13 +5,12 @@ import { FaqAccordion } from '@/components/faq/FaqAccordion';
 import { ScrollReveal } from '@/components/motion/scroll-reveal';
 import { MarketingDocHero } from '@/components/marketing/MarketingDocHero';
 import { faqItems } from '@/content/faq';
-import { buildPageMetadata } from '@/lib/constants/seo';
+import { buildPageMetadata, brandName } from '@/lib/constants/seo';
 
 export const metadata = buildPageMetadata({
   title: 'FAQs',
   path: '/faq',
-  description:
-    'Answers to common questions about OHealth+, consultations, lab tests, and your health records.',
+  description: `Answers to common questions about ${brandName}, consultations, lab tests, and your health records.`,
 });
 
 export default function FaqPage() {

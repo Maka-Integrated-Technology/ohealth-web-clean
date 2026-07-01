@@ -1,14 +1,17 @@
 import { expect, test } from '@playwright/test';
+import { brandName, altBrandName } from '@/lib/constants/seo';
 
 test.describe('App splash', () => {
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => sessionStorage.removeItem('ohealth-splash-seen'));
+    await page.addInitScript(() =>
+      sessionStorage.removeItem(`${altBrandName.toLowerCase()}-splash-seen`),
+    );
   });
 
   test('shows on first visit and can be skipped', async ({ page }) => {
     await page.goto('/');
 
-    const splash = page.getByRole('dialog', { name: 'Welcome to OHealth+' });
+    const splash = page.getByRole('dialog', { name: `Welcome to ${brandName}` });
     await expect(splash).toBeVisible();
     await page.getByRole('button', { name: 'Skip' }).click();
     await expect(splash).not.toBeVisible();
@@ -21,7 +24,7 @@ test.describe('App splash', () => {
     await page.goto('/');
 
     await expect(
-      page.getByRole('dialog', { name: 'Welcome to OHealth+' }),
+      page.getByRole('dialog', { name: `Welcome to ${brandName}` }),
     ).not.toBeVisible();
   });
 });

@@ -2,9 +2,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { AppStoreBadges } from '@/components/marketing/AppStoreBadges';
 import { FooterSocialLinks } from '@/components/layout/FooterSocialLinks';
+import { Button } from '@/components/ui/button';
 import { footerPrimaryLinks } from '@/lib/nav';
 import { getSocialLinks } from '@/lib/constants/external-links';
-import { Button } from '@/components/ui/button';
+import { brandName, companyName } from '@/lib/constants/seo';
 
 type FooterLinkButtonProps = {
   href: string;
@@ -41,20 +42,21 @@ export function Footer() {
               <div className="flex items-center gap-1">
                 <Image
                   src="/icons/logo.svg"
-                  alt="OHealth+ logo"
+                  alt={`${brandName} logo`}
                   width={24}
                   height={24}
                   className="h-6 w-6"
                   unoptimized
                 />
                 <p className="text-base font-semibold text-brand-black-800 tracking-[-0.8px] leading-[110%]">
-                  OHealth+
+                  {brandName}
                 </p>
               </div>
               <p className="max-w-md text-base text-brand-neutral-500">
-                OHealth+ is a digital healthcare platform that connects you with verified
-                healthcare professionals, lets you book consultations and lab tests
-                online, and securely manage all your health records in one place.
+                {brandName} is a digital healthcare platform that connects you with
+                verified verified healthcare professionals, lets you book consultationlab
+                tests tests online, and securely manage all your health records in one
+                place.
               </p>
             </div>
             <ul className="grid grid-cols-1 min-[320px]:grid-cols-2 gap-y-2 sm:gap-3 text-base leading-6 font-medium text-brand-neutral-500 md:flex md:gap-8">
@@ -73,8 +75,7 @@ export function Footer() {
 
         <section className="flex flex-col-reverse items-center justify-between gap-4 border-t border-brand-neutral-200 pt-8 md:flex-row md:px-8">
           <p className="text-base text-brand-neutral-500" suppressHydrationWarning>
-            © {new Date().getFullYear()} MAKA Integrated Technology LTD. All rights
-            reserved.
+            © {new Date().getFullYear()} {companyName}. All rights reserved.
           </p>
           {socialLinks.length > 0 ? <FooterSocialLinks links={socialLinks} /> : null}
         </section>

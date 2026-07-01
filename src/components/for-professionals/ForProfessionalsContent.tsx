@@ -12,6 +12,7 @@ import {
   whyCards,
 } from '@/content/for-professionals';
 import { getAppCtaHref } from '@/lib/constants/external-links';
+import { brandName } from '@/lib/constants/seo';
 
 export function ForProfessionalsContent() {
   return (
@@ -20,16 +21,16 @@ export function ForProfessionalsContent() {
         <HeroSection variant="professionals" />
 
         <WhatDoesSection
-          eyebrow="Why Join OHealth+"
-          title="Why Healthcare Professionals Choose OHealth+"
-          description="OHealth+ is built to simplify your workflow, expand your reach, and help you
-            focus on what matters most - providing quality care."
+          eyebrow={`Why Join ${brandName}`}
+          title={`Why Healthcare Professionals Choose ${brandName}`}
+          description={`${brandName} is built to simplify your workflow, expand your reach, and help you
+            focus on what matters most - providing quality care.`}
           cards={whyCards}
         />
 
         <HowItWorksSection
           title="Get Started"
-          description="Start using OHealth+ in just a few steps and begin connecting with patients seamlessly."
+          description={`Start using ${brandName} in just a few steps and begin connecting with patients seamlessly.`}
           steps={proSteps}
         />
       </section>
@@ -44,7 +45,7 @@ export function ForProfessionalsContent() {
       <DesignedWorkflowSection
         eyebrow="Built for Your Workflow"
         title="Designed for Modern Healthcare Professionals"
-        description="OHealth+ is designed to fit naturally into your workflow, helping you deliver care efficiently without the complexity of traditional systems."
+        description={`${brandName} is designed to fit naturally into your workflow, helping you deliver care efficiently without the complexity of traditional systems.`}
         cards={designedCards}
         desktopCols={3}
       />
@@ -53,7 +54,7 @@ export function ForProfessionalsContent() {
 
       <MarketingCtaBandSection
         title="Start Growing Your Practice Today"
-        description="Join OHealth+ and take the next step in delivering accessible, efficient, and modern healthcare."
+        description={`Join ${brandName} and take the next step in delivering accessible, efficient, and modern healthcare.`}
         primaryCtaLabel="Join as professional"
         primaryCtaHref="/contact"
         secondaryCtaLabel="Create an Account"

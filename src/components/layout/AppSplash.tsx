@@ -5,13 +5,13 @@ import { useCallback, useEffect, useRef, useSyncExternalStore } from 'react';
 
 import { BrandLogoMark } from '@/components/brand/BrandLogoMark';
 import { easeOutSmooth } from '@/lib/motion/presets';
+import { brandName, altBrandName } from '@/lib/constants/seo';
 import { cn } from '@/lib/utils';
 
-/** Time the splash stays fully visible before fade-out (~2s total with exit) */
 const SPLASH_HOLD_MS = 1600;
 const SPLASH_EXIT_MS = 400;
 const SPLASH_REDUCED_MS = 600;
-const SPLASH_SESSION_KEY = 'ohealth-splash-seen';
+const SPLASH_SESSION_KEY = `${altBrandName.toLowerCase()}-splash-seen`;
 
 const FOCUSABLE_SELECTOR = 'button:not([disabled]), [href], input:not([disabled])';
 
@@ -129,7 +129,7 @@ export function AppSplash() {
           key="app-splash"
           role="dialog"
           aria-modal="true"
-          aria-label="Welcome to OHealth+"
+          aria-label={`Welcome to ${brandName}`}
           className={cn(
             'fixed inset-0 z-200 flex flex-col items-center justify-center',
             'bg-linear-to-br from-[#d8e5ff] via-white to-brand-gray-50',
@@ -197,7 +197,7 @@ export function AppSplash() {
                 duration: 0.5,
                 ease: easeOutSmooth,
               }}>
-              OHealth+
+              {brandName}
             </m.p>
           </m.div>
         </m.div>
