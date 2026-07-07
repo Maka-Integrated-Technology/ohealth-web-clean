@@ -4,7 +4,7 @@ import { AppStoreBadges } from '@/components/marketing/AppStoreBadges';
 import { FooterSocialLinks } from '@/components/layout/FooterSocialLinks';
 import { Button } from '@/components/ui/button';
 import { footerPrimaryLinks } from '@/lib/nav';
-import { getSocialLinks } from '@/lib/constants/external-links';
+import { SOCIAL_LINKS } from '@/lib/constants/external-links';
 import { brandName, companyName } from '@/lib/constants/seo';
 
 type FooterLinkButtonProps = {
@@ -31,8 +31,6 @@ function FooterLinkButton({ href, children }: FooterLinkButtonProps) {
 }
 
 export function Footer() {
-  const socialLinks = getSocialLinks();
-
   return (
     <footer id="site-footer" className="border-t border-brand-gray-100 bg-brand-gray-100">
       <section className="mx-auto grid max-w-460 gap-12 px-4 py-12 xl:gap-16 xl:px-20 xl:pt-16 xl:pb-12">
@@ -77,7 +75,7 @@ export function Footer() {
           <p className="text-base text-brand-neutral-500" suppressHydrationWarning>
             © {new Date().getFullYear()} {companyName}. All rights reserved.
           </p>
-          {socialLinks.length > 0 ? <FooterSocialLinks links={socialLinks} /> : null}
+          <FooterSocialLinks links={SOCIAL_LINKS} />
         </section>
       </section>
     </footer>
