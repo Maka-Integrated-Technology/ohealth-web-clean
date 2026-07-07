@@ -5,7 +5,7 @@ import { FooterSocialLinks } from '@/components/layout/FooterSocialLinks';
 import { Button } from '@/components/ui/button';
 import { footerPrimaryLinks } from '@/lib/nav';
 import { SOCIAL_LINKS } from '@/lib/constants/external-links';
-import { brandName, companyName } from '@/lib/constants/seo';
+import { brandName, companyName, copyrightYear } from '@/lib/constants/seo';
 
 type FooterLinkButtonProps = {
   href: string;
@@ -72,8 +72,8 @@ export function Footer() {
         </section>
 
         <section className="flex flex-col-reverse items-center justify-between gap-4 border-t border-brand-neutral-200 pt-8 md:flex-row md:px-8">
-          <p className="text-base text-brand-neutral-500" suppressHydrationWarning>
-            © {new Date().getFullYear()} {companyName}. All rights reserved.
+          <p className="text-base text-brand-neutral-500">
+            © {copyrightYear} {companyName}. All rights reserved.
           </p>
           <FooterSocialLinks links={SOCIAL_LINKS} />
         </section>
