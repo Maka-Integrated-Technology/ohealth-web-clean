@@ -14,6 +14,7 @@ const siteUrl = getSiteUrl();
 export const brandName = 'OHealth+';
 export const altBrandName = 'OHealth';
 export const companyName = 'MAKA Integrated Technology LTD';
+export const copyrightYear = 2026;
 
 export const SEO_DETAILS = {
   title: {
