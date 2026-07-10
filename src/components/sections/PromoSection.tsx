@@ -2,7 +2,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ScrollReveal } from '@/components/motion/scroll-reveal';
 import { Button } from '@/components/ui/button';
-import { images } from '@/lib/images';
 import { brandName } from '@/lib/constants/seo';
 
 type PromoSectionProps = {
@@ -45,7 +44,7 @@ export function PromoSection({
           delay={0.1}
           className="relative overflow-hidden rounded-t-3xl bg-brand-gray-100 md:px-7.5 md:pt-7.5">
           <Image
-            src={images.proDashboard}
+            src={'/images/proAppointmentDashboard.png'}
             alt="Appointments and patient records"
             width={1200}
             height={700}
