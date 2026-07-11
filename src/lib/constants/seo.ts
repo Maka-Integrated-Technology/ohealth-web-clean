@@ -27,12 +27,29 @@ export const altBrandName = 'OHealth';
 export const companyName = 'MAKA Integrated Technology LTD';
 export const copyrightYear = 2026;
 
-export function getSeoDetails(): Omit<Metadata, 'openGraph' | 'twitter' | 'alternates'> {
+type SeoDetails = {
+  title: {
+    default: string;
+    template: string;
+  };
+  description: string;
+  metadataBase: URL;
+  icons: NonNullable<Metadata['icons']>;
+  robots: NonNullable<Metadata['robots']>;
+  authors: NonNullable<Metadata['authors']>;
+  keywords: NonNullable<Metadata['keywords']>;
+  generator: string;
+  publisher: string;
+  category: string;
+  applicationName: string;
+};
+
+export function getSeoDetails(): SeoDetails {
   const siteUrl = getSiteUrl();
 
   return {
     title: {
-      default: `${brandName} â€” Accessible, secure, and connected healthcare`,
+      default: `${brandName} - Accessible, secure, and connected healthcare`,
       template: `%s | ${brandName}`,
     },
     description: `${brandName} is a digital healthcare platform that connects you with verified healthcare professionals, lets you book consultations and lab tests online, and helps you manage health records securely in one place.`,
@@ -74,14 +91,11 @@ export function getSeoDetails(): Omit<Metadata, 'openGraph' | 'twitter' | 'alter
   };
 }
 
-export const siteOpenGraphImage = '/opengraph-image';
+export const siteOpenGraphImage = '/og';
 
 export function buildRootMetadata(): Metadata {
   const seoDetails = getSeoDetails();
-  const title =
-    typeof seoDetails.title === 'object' && seoDetails.title !== null
-      ? seoDetails.title.default
-      : brandName;
+  const title = seoDetails.title.default;
 
   return {
     ...seoDetails,
@@ -141,7 +155,7 @@ export function buildPageMetadata({
   };
 }
 
-/** Routes with real content â€” included in sitemap. */
+/** Routes with real content - included in sitemap. */
 export const PUBLIC_ROUTES = [
   '/',
   '/for-professionals',
@@ -151,7 +165,7 @@ export const PUBLIC_ROUTES = [
   '/terms',
 ] as const;
 
-/** Placeholder routes â€” live but excluded from sitemap until content ships. */
+/** Placeholder routes - live but excluded from sitemap until content ships. */
 export const STUB_ROUTES = ['/blog', '/careers'] as const;
 
 /** Metadata for stub/placeholder pages (noindex, follow). */
