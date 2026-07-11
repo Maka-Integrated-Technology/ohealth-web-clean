@@ -2,78 +2,108 @@ import type { Metadata } from 'next';
 
 /** Public site origin for canonical URLs, Open Graph, and sitemap. */
 export function getSiteUrl(): string {
-  const fromEnv =
+  const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL?.trim() ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : '') ||
     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '');
 
-  return (fromEnv || 'http://localhost:3000').replace(/\/$/, '');
-}
+  if (siteUrl) {
+    return siteUrl.replace(/\/$/, '');
+  }
 
-const siteUrl = getSiteUrl();
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error(
+      'Missing site origin for metadata. Set NEXT_PUBLIC_SITE_URL or provide a deployment URL environment variable.',
+    );
+  }
+
+  return 'http://localhost:3000';
+}
 
 export const brandName = 'OHealth+';
 export const altBrandName = 'OHealth';
 export const companyName = 'MAKA Integrated Technology LTD';
 export const copyrightYear = 2026;
 
-export const SEO_DETAILS = {
+type SeoDetails = {
   title: {
-    default: `${brandName} — Accessible, secure, and connected healthcare`,
-    template: `%s | ${brandName}`,
-  },
-  description: `${brandName} is a digital healthcare platform that connects you with verified healthcare professionals, lets you book consultations and lab tests online, and helps you manage health records securely in one place.`,
-  metadataBase: new URL(siteUrl),
-  icons: {
-    icon: [{ url: '/icon.svg', type: 'image/svg+xml' }],
-    apple: [{ url: '/icon.svg', type: 'image/svg+xml' }],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  authors: [{ name: companyName, url: siteUrl }],
-  keywords: [
-    brandName,
-    altBrandName,
-    'digital healthcare',
-    'telehealth',
-    'telemedicine',
-    'online doctor',
-    'health records',
-    'lab tests',
-    'book consultation',
-    'healthcare professionals',
-    'patient portal',
-    'medical appointments',
-  ],
-  generator: 'Next.js',
-  publisher: companyName,
-  category: 'Healthcare',
-  applicationName: brandName,
-} satisfies Omit<Metadata, 'openGraph' | 'twitter' | 'alternates'>;
+    default: string;
+    template: string;
+  };
+  description: string;
+  metadataBase: URL;
+  icons: NonNullable<Metadata['icons']>;
+  robots: NonNullable<Metadata['robots']>;
+  authors: NonNullable<Metadata['authors']>;
+  keywords: NonNullable<Metadata['keywords']>;
+  generator: string;
+  publisher: string;
+  category: string;
+  applicationName: string;
+};
 
-export const siteOpenGraphImage = '/opengraph-image';
-
-export function buildRootMetadata(): Metadata {
-  const title =
-    typeof SEO_DETAILS.title === 'object' && SEO_DETAILS.title !== null
-      ? SEO_DETAILS.title.default
-      : brandName;
+export function getSeoDetails(): SeoDetails {
+  const siteUrl = getSiteUrl();
 
   return {
-    ...SEO_DETAILS,
+    title: {
+      default: `${brandName} - Accessible, secure, and connected healthcare`,
+      template: `%s | ${brandName}`,
+    },
+    description: `${brandName} is a digital healthcare platform that connects you with verified healthcare professionals, lets you book consultations and lab tests online, and helps you manage health records securely in one place.`,
+    metadataBase: new URL(siteUrl),
+    icons: {
+      icon: [{ url: '/icon.svg', type: 'image/svg+xml' }],
+      apple: [{ url: '/icon.svg', type: 'image/svg+xml' }],
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+    authors: [{ name: companyName, url: siteUrl }],
+    keywords: [
+      brandName,
+      altBrandName,
+      'digital healthcare',
+      'telehealth',
+      'telemedicine',
+      'online doctor',
+      'health records',
+      'lab tests',
+      'book consultation',
+      'healthcare professionals',
+      'patient portal',
+      'medical appointments',
+    ],
+    generator: 'Next.js',
+    publisher: companyName,
+    category: 'Healthcare',
+    applicationName: brandName,
+  };
+}
+
+export const siteOpenGraphImage = '/og';
+
+export function buildRootMetadata(): Metadata {
+  const seoDetails = getSeoDetails();
+  const title = seoDetails.title.default;
+
+  return {
+    ...seoDetails,
     openGraph: {
       title,
-      description: SEO_DETAILS.description,
+      description: seoDetails.description,
       type: 'website',
-      url: SEO_DETAILS.metadataBase,
+      url: seoDetails.metadataBase,
       siteName: brandName,
       locale: 'en_US',
       images: [{ url: siteOpenGraphImage, width: 1200, height: 630, alt: brandName }],
@@ -81,7 +111,7 @@ export function buildRootMetadata(): Metadata {
     twitter: {
       card: 'summary_large_image',
       title,
-      description: SEO_DETAILS.description,
+      description: seoDetails.description,
       images: [siteOpenGraphImage],
     },
   };
@@ -97,17 +127,19 @@ type PageMetadataOptions = {
 export function buildPageMetadata({
   title,
   path,
-  description = SEO_DETAILS.description,
+  description,
 }: PageMetadataOptions): Metadata {
-  const canonicalUrl = new URL(path, SEO_DETAILS.metadataBase).toString();
+  const seoDetails = getSeoDetails();
+  const pageDescription = description ?? seoDetails.description;
+  const canonicalUrl = new URL(path, seoDetails.metadataBase).toString();
 
   return {
     title,
-    description,
+    description: pageDescription,
     alternates: { canonical: path },
     openGraph: {
       title: `${title} | ${brandName}`,
-      description,
+      description: pageDescription,
       type: 'website',
       url: canonicalUrl,
       siteName: brandName,
@@ -117,13 +149,13 @@ export function buildPageMetadata({
     twitter: {
       card: 'summary_large_image',
       title: `${title} | ${brandName}`,
-      description,
+      description: pageDescription,
       images: [siteOpenGraphImage],
     },
   };
 }
 
-/** Routes with real content — included in sitemap. */
+/** Routes with real content - included in sitemap. */
 export const PUBLIC_ROUTES = [
   '/',
   '/for-professionals',
@@ -133,14 +165,14 @@ export const PUBLIC_ROUTES = [
   '/terms',
 ] as const;
 
-/** Placeholder routes — live but excluded from sitemap until content ships. */
+/** Placeholder routes - live but excluded from sitemap until content ships. */
 export const STUB_ROUTES = ['/blog', '/careers'] as const;
 
 /** Metadata for stub/placeholder pages (noindex, follow). */
 export function buildStubPageMetadata({
   title,
   path,
-  description = SEO_DETAILS.description,
+  description,
 }: PageMetadataOptions): Metadata {
   return {
     ...buildPageMetadata({ title, path, description }),
