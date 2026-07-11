@@ -104,7 +104,7 @@ cp .env.example .env.local
 | `CONTACT_TO_EMAIL`                  | No              | Inbox override (default: `support@ohealthltd.com`)     |
 | `UPSTASH_REDIS_REST_URL`            | Yes             | Distributed contact-form rate limiting                 |
 | `UPSTASH_REDIS_REST_TOKEN`          | Yes             | Upstash REST token                                     |
-| `NEXT_PUBLIC_SITE_URL`              | Recommended     | Canonical URLs, Open Graph, sitemap                    |
+| `NEXT_PUBLIC_SITE_URL`              | Yes             | Canonical URLs, Open Graph, sitemap                    |
 | `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` | No              | Cloudinary tenant override                             |
 | `E2E`                               | Never in prod   | Set by Playwright only; mocks Resend in non-production |
 
