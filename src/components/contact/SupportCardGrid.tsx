@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { ScrollRevealGroup, ScrollRevealItem } from '@/components/motion/scroll-reveal';
