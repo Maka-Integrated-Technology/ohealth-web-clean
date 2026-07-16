@@ -5,6 +5,8 @@ import {
   ScrollRevealItem,
 } from '@/components/motion/scroll-reveal';
 import { Card, CardContent } from '@/components/ui/card';
+import { FeatureCardCarousel } from '@/components/sections/FeatureCardCarousel';
+import type { ProfessionalCarouselItem, SpecialtyCarouselItem } from '@/content/home';
 import { cn } from '@/lib/utils';
 
 type WhatDoesCard = {
@@ -12,6 +14,8 @@ type WhatDoesCard = {
   description: string;
   imageSrc?: string;
   imageAlt?: string;
+  professionals?: ProfessionalCarouselItem[];
+  specialties?: SpecialtyCarouselItem[];
 };
 
 type WhatDoesSectionProps = {
@@ -61,7 +65,7 @@ export function WhatDoesSection({
                   'flex flex-1 flex-col px-4 pb-4 pt-4 md:px-6 md:pb-6 md:pt-7.5',
                   cardClassName,
                 )}>
-                <div className="flex-1">
+                <div>
                   <h3 className="text-2xl font-semibold leading-8 text-brand-gray-800">
                     {c.title}
                   </h3>
@@ -69,7 +73,19 @@ export function WhatDoesSection({
                     {c.description}
                   </p>
                 </div>
-                {c.imageSrc ? (
+                {c.professionals && c.professionals.length > 0 ? (
+                  <FeatureCardCarousel
+                    variant="professionals"
+                    title="Available Professionals"
+                    items={c.professionals}
+                  />
+                ) : c.specialties && c.specialties.length > 0 ? (
+                  <FeatureCardCarousel
+                    variant="specialties"
+                    title="Choose a Specialty"
+                    items={c.specialties}
+                  />
+                ) : c.imageSrc ? (
                   <Image
                     src={c.imageSrc}
                     alt={c.imageAlt ?? c.title}
