@@ -21,7 +21,6 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 
-/** Fields on the gradient contact card — extends shared Input/Textarea primitives */
 const contactFieldClassName = cn(
   'mt-3 h-auto min-h-0 rounded-lg border-brand-neutral-200/25 bg-white/5 p-4 text-base leading-[120%] tracking-[-0.5px]',
   'text-white shadow-none outline-none transition-colors placeholder:text-white/50',
