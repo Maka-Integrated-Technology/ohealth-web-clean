@@ -17,6 +17,25 @@ export type HomeWhatDoesCard = {
   description: string;
   imageSrc: string;
   imageAlt: string;
+  professionals?: ProfessionalCarouselItem[];
+  specialties?: SpecialtyCarouselItem[];
+};
+
+export type ProfessionalCarouselItem = {
+  name: string;
+  specialty: string;
+  photoUrl: string;
+  rating: number;
+  reviewCount: number;
+  price: string;
+};
+
+export type SpecialtyCarouselItem = {
+  label: string;
+  photoUrl: string;
+  objectPosition: string;
+  scale: number;
+  labelSide: 'left' | 'right';
 };
 
 export type HomeTrustedCard = {
@@ -70,6 +89,66 @@ export const whoItsForItems: HomeWhoItsForItem[] = [
   },
 ];
 
+export const availableProfessionals: ProfessionalCarouselItem[] = [
+  {
+    name: 'Dr. Aisha Bello',
+    specialty: 'General Doctor',
+    photoUrl: '/images/aisha.png',
+    rating: 4.9,
+    reviewCount: 120,
+    price: '₦15,000',
+  },
+  {
+    name: 'Dr. Emeka Okafor',
+    specialty: 'Cardiologist',
+    photoUrl:
+      'https://images.unsplash.com/photo-1645066928295-2506defde470?auto=format&fit=crop&crop=faces&w=200&h=200&q=80',
+    rating: 4.8,
+    reviewCount: 96,
+    price: '₦20,000',
+  },
+  {
+    name: 'Dr. Ngozi Umeh',
+    specialty: 'Pediatrician',
+    photoUrl:
+      'https://images.unsplash.com/photo-1758691461957-474a7686e388?auto=format&fit=crop&crop=faces&w=200&h=200&q=80',
+    rating: 4.7,
+    reviewCount: 84,
+    price: '₦12,000',
+  },
+];
+
+export const specialtyOptions: SpecialtyCarouselItem[] = [
+  {
+    label: 'General Doctor',
+    photoUrl: '/images/doctor.png',
+    objectPosition: '15% 40%',
+    scale: 1.2,
+    labelSide: 'right',
+  },
+  {
+    label: 'Nurse',
+    photoUrl: '/images/nurse.png',
+    objectPosition: '15% 40%',
+    scale: 1.1,
+    labelSide: 'right',
+  },
+  {
+    label: 'Nutritionist',
+    photoUrl: '/images/nutritionist.png',
+    objectPosition: '15% 40%',
+    scale: 1.1,
+    labelSide: 'right',
+  },
+  {
+    label: 'Counselor',
+    photoUrl: '/images/counselor.png',
+    objectPosition: '15% 40%',
+    scale: 1.1,
+    labelSide: 'right',
+  },
+];
+
 export const whatDoesCards: HomeWhatDoesCard[] = [
   {
     title: 'Online Medical Consultations',
@@ -77,6 +156,7 @@ export const whatDoesCards: HomeWhatDoesCard[] = [
       'Connect with verified doctors, therapists, and specialists for virtual consultations from anywhere.',
     imageSrc: '/images/card-image-1.svg',
     imageAlt: 'Online consultation preview',
+    professionals: availableProfessionals,
   },
   {
     title: 'Hospital, Pharmacy & Lab Partnerships',
@@ -84,6 +164,7 @@ export const whatDoesCards: HomeWhatDoesCard[] = [
       'Book diagnostic tests with registered hospitals, pharmacies and laboratories and receive results digitally.',
     imageSrc: '/images/card-image-2.svg',
     imageAlt: 'Hospital and lab partnerships preview',
+    specialties: specialtyOptions,
   },
   {
     title: 'AI-Assisted Support',
