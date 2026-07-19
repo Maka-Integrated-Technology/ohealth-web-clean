@@ -27,8 +27,6 @@ export function ContactSubmitButton({
           Sending...
           <Loader2 size={16} aria-hidden />
         </>
-      ) : isCoolingDown ? (
-        <>Please wait {remainingSeconds} seconds</>
       ) : (
         <>
           Send Message
