@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 const COOLDOWN_MS = 60_000;
 
@@ -21,13 +21,25 @@ export function useSubmitCooldown() {
         intervalRef.current = null;
       }
     }
+
     tick();
     intervalRef.current = window.setInterval(tick, 250);
+
+    return () => {
+      if (intervalRef.current != null) {
+        window.clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
   }, [cooldownUntil]);
+
+  const startCooldown = useCallback(() => {
+    setCooldownUntil(Date.now() + COOLDOWN_MS);
+  }, []);
 
   return {
     isCoolingDown: remainingMs > 0,
     remainingSeconds: Math.ceil(remainingMs / 1000),
-    startCooldown: () => setCooldownUntil(Date.now() + COOLDOWN_MS),
+    startCooldown,
   };
 }

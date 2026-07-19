@@ -9,17 +9,16 @@ import {
   type FormEvent,
   type ReactNode,
 } from 'react';
-import { useFormStatus } from 'react-dom';
-import { ArrowRight, Loader2 } from 'lucide-react';
 
 import { submitContactForm } from '@/app/contact/actions';
 import { ScrollReveal } from '@/components/motion/scroll-reveal';
 import { contactFormInitialState } from '@/lib/contact/contact-form-state';
 import { CONTACT_HONEYPOT_FIELD } from '@/lib/contact/contact-limits';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
+import { useSubmitCooldown } from '@/hooks/use-submit-cooldown';
+import { ContactSubmitButton } from '@/components/contact/contact-submit-button';
 
 const contactFieldClassName = cn(
   'mt-3 h-auto min-h-0 rounded-lg border-brand-neutral-200/25 bg-white/5 p-4 text-base leading-[120%] tracking-[-0.5px]',
@@ -61,26 +60,6 @@ function ContactFieldLabel({
   );
 }
 
-function ContactSubmitButton() {
-  const { pending } = useFormStatus();
-
-  return (
-    <Button type="submit" variant="marketingOnDark" size="form-submit" disabled={pending}>
-      {pending ? (
-        <>
-          Sending...
-          <Loader2 size={16} aria-hidden />
-        </>
-      ) : (
-        <>
-          Send Message
-          <ArrowRight size={16} strokeWidth={2} aria-hidden />
-        </>
-      )}
-    </Button>
-  );
-}
-
 export function ContactLeadForm() {
   const [state, formAction] = useActionState(submitContactForm, contactFormInitialState);
   const [values, setValues] = useState<FormValues>(emptyFormValues);
@@ -88,6 +67,7 @@ export function ContactLeadForm() {
   const clearedForSuccessAt = useRef<number | null>(null);
 
   const showThankYou = state.successAt != null && dismissedSuccessAt !== state.successAt;
+  const { isCoolingDown, remainingSeconds, startCooldown } = useSubmitCooldown();
 
   useEffect(() => {
     if (state.successAt == null || clearedForSuccessAt.current === state.successAt)
@@ -95,7 +75,8 @@ export function ContactLeadForm() {
 
     clearedForSuccessAt.current = state.successAt;
     setValues(emptyFormValues);
-  }, [state.successAt]);
+    startCooldown();
+  }, [state.successAt, startCooldown]);
 
   useEffect(() => {
     if (state.successAt == null) return;
@@ -260,7 +241,10 @@ export function ContactLeadForm() {
         </div>
 
         <div className="flex flex-col items-center gap-0 pt-2">
-          <ContactSubmitButton />
+          <ContactSubmitButton
+            isCoolingDown={isCoolingDown}
+            remainingSeconds={remainingSeconds}
+          />
           {showThankYou ? (
             <p
               className="mt-8 max-w-md animate-in fade-in duration-300 text-center text-base leading-relaxed text-white/95"
