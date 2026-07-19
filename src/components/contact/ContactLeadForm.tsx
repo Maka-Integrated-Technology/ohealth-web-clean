@@ -69,7 +69,7 @@ function ContactSubmitButton() {
       {pending ? (
         <>
           Sending...
-          <Loader2 size={16} className="animate-spin" aria-hidden />
+          <Loader2 size={16} aria-hidden />
         </>
       ) : (
         <>
