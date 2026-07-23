@@ -15,7 +15,8 @@ export async function getRequestIp(): Promise<string> {
   }
 
   if (process.env.NODE_ENV === 'development') {
-    return 'dev-local';
+    const forwardedIp = headerList.get('x-forwarded-for')?.split(',')[0]?.trim();
+    return forwardedIp || 'dev-local';
   }
 
   return 'unknown';
