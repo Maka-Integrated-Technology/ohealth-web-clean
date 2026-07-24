@@ -45,6 +45,15 @@ describe('getRequestIp', () => {
     await expect(getRequestIp()).resolves.toBe('dev-local');
   });
 
+  it('uses x-forwarded-for in development when present, for e2e test isolation', async () => {
+    vi.stubEnv('NODE_ENV', 'development');
+    delete process.env.VERCEL;
+    headersMock.mockResolvedValue(new Headers({ 'x-forwarded-for': '203.0.113.42' }));
+
+    const { getRequestIp } = await import('@/lib/contact/get-request-ip');
+    await expect(getRequestIp()).resolves.toBe('203.0.113.42');
+  });
+
   it('returns unknown outside development when IP cannot be resolved', async () => {
     vi.stubEnv('NODE_ENV', 'production');
     delete process.env.VERCEL;

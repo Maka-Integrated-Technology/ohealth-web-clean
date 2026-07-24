@@ -20,11 +20,17 @@ export function isValidContactEmail(email: string): boolean {
 
 const FULL_NAME_MIN_LENGTH = 2;
 
-const SPACELESS_NAME_SCRIPT = /[\u4e00-\u9fff\u3040-\u30ff\u30a0-\u30ff\uac00-\ud7af]/u;
+/** Matches C0/C1 control characters, incl. CR/LF - never valid in a name or email header value. */
+const CONTROL_CHAR_PATTERN = /[\u0000-\u001F\u007F-\u009F]/;
+
+export function hasControlChars(value: string): boolean {
+  return CONTROL_CHAR_PATTERN.test(value);
+}
 
 export function isValidContactFullName(fullName: string): boolean {
   const trimmed = fullName.trim();
   if (trimmed.length < FULL_NAME_MIN_LENGTH) return false;
+  if (hasControlChars(trimmed)) return false;
 
   const parts = trimmed.split(/[\s-]+/).filter(part => part.length > 0);
 
@@ -32,7 +38,7 @@ export function isValidContactFullName(fullName: string): boolean {
     return parts.every(part => /\p{L}/u.test(part));
   }
 
-  return SPACELESS_NAME_SCRIPT.test(trimmed) && /^\p{L}+$/u.test(trimmed);
+  return /^\p{L}+$/u.test(trimmed);
 }
 
 export function parseContactFormData(formData: FormData): ContactMessageInput | null {
@@ -63,6 +69,7 @@ export function parseContactFormData(formData: FormData): ContactMessageInput | 
     ) ||
     !withinLimit(trimmedMessage, CONTACT_FIELD_LIMITS.message) ||
     trimmedProfession.length > CONTACT_FIELD_LIMITS.profession ||
+    hasControlChars(trimmedProfession) ||
     !isValidContactEmail(trimmedEmail)
   ) {
     return null;
