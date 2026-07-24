@@ -63,6 +63,7 @@ test.describe('Contact form', () => {
 
 test.describe('Contact rate limit', () => {
   test.describe.configure({ mode: 'serial' });
+  test.use({ extraHTTPHeaders: { 'x-forwarded-for': '203.0.113.42' } });
 
   test('shows rate-limit message after repeated submissions', async ({ page }) => {
     await page.goto('/contact');
