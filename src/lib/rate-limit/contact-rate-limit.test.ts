@@ -70,6 +70,19 @@ describe('assertContactRateLimit', () => {
     });
   });
 
+  it('falls back to in-memory limiting in E2E mode even with Upstash credentials set', async () => {
+    vi.stubEnv('NODE_ENV', 'development');
+    vi.stubEnv('E2E', 'true');
+    process.env.UPSTASH_REDIS_REST_URL = 'https://example.upstash.io';
+    process.env.UPSTASH_REDIS_REST_TOKEN = 'dummy-token';
+
+    const { assertContactRateLimit } = await loadRateLimit();
+    const identifier = `e2e-${Date.now()}`;
+
+    await expect(assertContactRateLimit(identifier)).resolves.toEqual({ ok: true });
+    expect(limitMock).not.toHaveBeenCalled();
+  });
+
   it('falls back to in-memory limiting in non-production without Upstash', async () => {
     vi.stubEnv('NODE_ENV', 'development');
     delete process.env.UPSTASH_REDIS_REST_URL;

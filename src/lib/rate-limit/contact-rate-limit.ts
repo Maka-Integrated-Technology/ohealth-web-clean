@@ -7,7 +7,14 @@ const CONTACT_WINDOW = '1 h';
 
 let upstashRatelimit: Ratelimit | null = null;
 
+/** Skip Upstash in E2E/mock runs even if placeholder credentials are set (e.g. CI build-env vars). */
+function shouldUseMemoryLimiter(): boolean {
+  if (process.env.NODE_ENV === 'production') return false;
+  return process.env.E2E === 'true' || process.env.CONTACT_MOCK_SEND === 'true';
+}
+
 function getUpstashRatelimit(): Ratelimit | null {
+  if (shouldUseMemoryLimiter()) return null;
   if (upstashRatelimit) return upstashRatelimit;
 
   const url = process.env.UPSTASH_REDIS_REST_URL?.trim();
