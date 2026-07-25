@@ -27,7 +27,6 @@ export type ProfessionalCarouselItem = {
   photoUrl: string;
   rating: number;
   reviewCount: number;
-  price: string;
 };
 
 export type SpecialtyCarouselItem = {
@@ -96,25 +95,20 @@ export const availableProfessionals: ProfessionalCarouselItem[] = [
     photoUrl: '/images/aisha.png',
     rating: 4.9,
     reviewCount: 120,
-    price: '₦15,000',
   },
   {
     name: 'Dr. Emeka Okafor',
     specialty: 'Cardiologist',
-    photoUrl:
-      'https://images.unsplash.com/photo-1645066928295-2506defde470?auto=format&fit=crop&crop=faces&w=200&h=200&q=80',
+    photoUrl: '/images/professional-emeka-okafor.jpg',
     rating: 4.8,
     reviewCount: 96,
-    price: '₦20,000',
   },
   {
     name: 'Dr. Ngozi Umeh',
     specialty: 'Pediatrician',
-    photoUrl:
-      'https://images.unsplash.com/photo-1758691461957-474a7686e388?auto=format&fit=crop&crop=faces&w=200&h=200&q=80',
+    photoUrl: '/images/professional-ngozi-umeh.jpg',
     rating: 4.7,
     reviewCount: 84,
-    price: '₦12,000',
   },
 ];
 
