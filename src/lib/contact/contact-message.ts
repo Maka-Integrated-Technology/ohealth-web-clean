@@ -67,7 +67,6 @@ export function parseContactFormData(formData: FormData): ContactMessageInput | 
       CONTACT_FIELD_LIMITS.message,
       CONTACT_FIELD_LIMITS.messageMin,
     ) ||
-    !withinLimit(trimmedMessage, CONTACT_FIELD_LIMITS.message) ||
     trimmedProfession.length > CONTACT_FIELD_LIMITS.profession ||
     hasControlChars(trimmedProfession) ||
     !isValidContactEmail(trimmedEmail)

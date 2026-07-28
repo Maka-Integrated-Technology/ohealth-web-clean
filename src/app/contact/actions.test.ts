@@ -5,6 +5,7 @@ import type { ContactFormState } from '@/lib/contact/contact-form-state';
 const getRequestIpMock = vi.fn();
 const assertContactRateLimitMock = vi.fn();
 const sendContactMessageMock = vi.fn();
+const hasValidEmailDomainMock = vi.fn();
 
 vi.mock('@/lib/contact/get-request-ip', () => ({
   getRequestIp: () => getRequestIpMock(),
@@ -16,6 +17,10 @@ vi.mock('@/lib/rate-limit/contact-rate-limit', () => ({
 
 vi.mock('@/lib/contact/send-contact-message', () => ({
   sendContactMessage: (input: unknown) => sendContactMessageMock(input),
+}));
+
+vi.mock('@/lib/contact/validate-email-domain', () => ({
+  hasValidEmailDomain: (email: string) => hasValidEmailDomainMock(email),
 }));
 
 import { submitContactForm } from '@/app/contact/actions';
@@ -40,9 +45,11 @@ describe('submitContactForm', () => {
     getRequestIpMock.mockReset();
     assertContactRateLimitMock.mockReset();
     sendContactMessageMock.mockReset();
+    hasValidEmailDomainMock.mockReset();
     getRequestIpMock.mockResolvedValue('203.0.113.9');
     assertContactRateLimitMock.mockResolvedValue({ ok: true });
     sendContactMessageMock.mockResolvedValue({ ok: true, data: { id: 'email_123' } });
+    hasValidEmailDomainMock.mockResolvedValue(true);
   });
 
   it('returns field errors for invalid input', async () => {
@@ -50,6 +57,26 @@ describe('submitContactForm', () => {
 
     expect(result.success).toBe(false);
     expect(result.fieldErrors.fullName).toBe('Full name is required.');
+    expect(hasValidEmailDomainMock).not.toHaveBeenCalled();
+    expect(assertContactRateLimitMock).not.toHaveBeenCalled();
+    expect(sendContactMessageMock).not.toHaveBeenCalled();
+  });
+
+  it('returns an email field error for a disposable domain', async () => {
+    hasValidEmailDomainMock.mockResolvedValue(false);
+
+    const result = await submitContactForm(
+      initialState,
+      formData({
+        fullName: 'Jane Doe',
+        email: 'tasteless.chicken.epj@hidingmail.net',
+        message: 'Hello team',
+      }),
+    );
+
+    expect(result.success).toBe(false);
+    expect(result.error).toBe('Please fix the errors below.');
+    expect(result.fieldErrors.email).toBe('Please enter a valid email address.');
     expect(assertContactRateLimitMock).not.toHaveBeenCalled();
     expect(sendContactMessageMock).not.toHaveBeenCalled();
   });
@@ -75,6 +102,7 @@ describe('submitContactForm', () => {
       error: 'Too many messages sent. Please wait an hour and try again.',
       fieldErrors: {},
     });
+    expect(hasValidEmailDomainMock).toHaveBeenCalledWith('jane@example.com');
     expect(getRequestIpMock).toHaveBeenCalled();
     expect(sendContactMessageMock).not.toHaveBeenCalled();
   });
@@ -111,6 +139,7 @@ describe('submitContactForm', () => {
     expect(result.success).toBe(true);
     expect(result.error).toBeNull();
     expect(result.successAt).toEqual(expect.any(Number));
+    expect(hasValidEmailDomainMock).toHaveBeenCalledWith('jane@example.com');
     expect(sendContactMessageMock).toHaveBeenCalledWith({
       fullName: 'Jane Doe',
       email: 'jane@example.com',
