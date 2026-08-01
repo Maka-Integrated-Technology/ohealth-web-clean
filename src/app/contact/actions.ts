@@ -4,6 +4,7 @@ import type { ContactFormState } from '@/lib/contact/contact-form-state';
 import { getRequestIp } from '@/lib/contact/get-request-ip';
 import { sendContactMessage } from '@/lib/contact/send-contact-message';
 import { validateContactForm } from '@/lib/contact/validate-contact-form';
+import { hasValidEmailDomain } from '@/lib/contact/validate-email-domain';
 import { assertContactRateLimit } from '@/lib/rate-limit/contact-rate-limit';
 
 export async function submitContactForm(
@@ -18,6 +19,17 @@ export async function submitContactForm(
       successAt: null,
       error: validation.error,
       fieldErrors: validation.fieldErrors,
+    };
+  }
+
+  const domainValid = await hasValidEmailDomain(validation.payload.email);
+
+  if (!domainValid) {
+    return {
+      success: false,
+      successAt: null,
+      error: 'Please fix the errors below.',
+      fieldErrors: { email: 'Please enter a valid email address.' },
     };
   }
 
