@@ -34,11 +34,9 @@ export function isValidContactFullName(fullName: string): boolean {
 
   const parts = trimmed.split(/[\s-]+/).filter(part => part.length > 0);
 
-  if (parts.length >= 2) {
-    return parts.every(part => /\p{L}/u.test(part));
-  }
+  if (parts.length < 2) return false;
 
-  return /^\p{L}+$/u.test(trimmed);
+  return parts.every(part => /\p{L}/u.test(part));
 }
 
 export function parseContactFormData(formData: FormData): ContactMessageInput | null {

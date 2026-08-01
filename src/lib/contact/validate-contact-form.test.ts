@@ -36,11 +36,11 @@ describe('isValidContactEmail', () => {
 
 describe('isValidContactFullName', () => {
   it('accepts mononyms and multi-part names', () => {
-    expect(isValidContactFullName('Madonna')).toBe(true);
+    expect(isValidContactFullName('Madonna')).toBe(false);
     expect(isValidContactFullName('Jane Doe')).toBe(true);
     expect(isValidContactFullName('Mary Jane Watson')).toBe(true);
     expect(isValidContactFullName('Jean-Luc')).toBe(true);
-    expect(isValidContactFullName('李明')).toBe(true);
+    expect(isValidContactFullName('李明')).toBe(false);
   });
 
   it('rejects empty, too-short, or non-name values', () => {
@@ -81,7 +81,7 @@ describe('validateContactForm', () => {
     expect(result.ok).toBe(false);
   });
 
-  it('accepts a mononym full name', () => {
+  it('rejects a mononym full name', () => {
     const result = validateContactForm(
       formData({
         fullName: 'Madonna',
@@ -89,8 +89,10 @@ describe('validateContactForm', () => {
         message: 'Hello team',
       }),
     );
-
-    expect(result.ok).toBe(true);
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.fieldErrors.fullName).toBe('Please enter a valid full name.');
+    }
   });
 
   it('rejects a non-name full name', () => {
