@@ -58,14 +58,14 @@ export function WhatDoesSection({
           gridClassName,
         )}>
         {cards.map(c => (
-          <ScrollRevealItem key={c.title} variant="scaleIn">
-            <Card className="h-full gap-0 border border-transparent bg-brand-neutral-50 py-0 shadow-brand-sm ring-0 transition hover:border-brand-primary-200 hover:shadow-md">
+          <ScrollRevealItem key={c.title} variant="scaleIn" className="min-w-0">
+            <Card className="h-full min-w-0 gap-0 border border-transparent bg-brand-neutral-50 py-0 shadow-brand-sm ring-0 transition hover:border-brand-primary-200 hover:shadow-md">
               <CardContent
                 className={cn(
-                  'flex flex-1 flex-col px-4 pb-4 pt-4 md:px-6 md:pb-6 md:pt-7.5',
+                  'flex min-w-0 flex-1 flex-col px-4 pb-4 pt-4 md:px-6 md:pb-6 md:pt-7.5',
                   cardClassName,
                 )}>
-                <div>
+                <div className="min-w-0">
                   <h3 className="text-2xl font-semibold leading-8 text-brand-gray-800">
                     {c.title}
                   </h3>
