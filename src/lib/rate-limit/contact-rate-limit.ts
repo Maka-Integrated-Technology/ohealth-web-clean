@@ -1,46 +1,31 @@
-import { Ratelimit } from '@upstash/ratelimit';
-import { Redis } from '@upstash/redis';
-import { altBrandName } from '@/lib/constants/seo';
-
 const CONTACT_LIMIT = 5;
-const CONTACT_WINDOW = '1 h';
+const CONTACT_WINDOW_MS = 60 * 60 * 1000;
 
-let upstashRatelimit: Ratelimit | null = null;
-
-/** Skip Upstash in E2E/mock runs even if placeholder credentials are set (e.g. CI build-env vars). */
-function shouldUseMemoryLimiter(): boolean {
-  if (process.env.NODE_ENV === 'production') return false;
-  return process.env.E2E === 'true' || process.env.CONTACT_MOCK_SEND === 'true';
-}
-
-function getUpstashRatelimit(): Ratelimit | null {
-  if (shouldUseMemoryLimiter()) return null;
-  if (upstashRatelimit) return upstashRatelimit;
-
-  const url = process.env.UPSTASH_REDIS_REST_URL?.trim();
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN?.trim();
-  if (!url || !token) return null;
-
-  upstashRatelimit = new Ratelimit({
-    redis: new Redis({ url, token }),
-    limiter: Ratelimit.slidingWindow(CONTACT_LIMIT, CONTACT_WINDOW),
-    prefix: `${altBrandName.toLowerCase()}-contact`,
-  });
-
-  return upstashRatelimit;
-}
-
-/** In-memory fallback — best-effort per server instance (not for multi-region serverless). */
+/** Best-effort per server instance — not shared across serverless instances or regions. */
 const memoryHits = new Map<string, number[]>();
-const MEMORY_WINDOW_MS = 60 * 60 * 1000;
+const PRUNE_THRESHOLD = 1000;
+
+function pruneExpired(now: number): void {
+  for (const [key, hits] of memoryHits) {
+    if (hits.every(t => now - t >= CONTACT_WINDOW_MS)) {
+      memoryHits.delete(key);
+    }
+  }
+}
 
 function checkMemoryLimit(identifier: string): boolean {
   const now = Date.now();
+
+  if (memoryHits.size >= PRUNE_THRESHOLD) {
+    pruneExpired(now);
+  }
+
   const recent = (memoryHits.get(identifier) ?? []).filter(
-    t => now - t < MEMORY_WINDOW_MS,
+    t => now - t < CONTACT_WINDOW_MS,
   );
 
   if (recent.length >= CONTACT_LIMIT) {
+    memoryHits.set(identifier, recent);
     return false;
   }
 
@@ -54,29 +39,6 @@ export type ContactRateLimitResult = { ok: true } | { ok: false; error: string }
 export async function assertContactRateLimit(
   identifier: string,
 ): Promise<ContactRateLimitResult> {
-  const ratelimit = getUpstashRatelimit();
-
-  if (ratelimit) {
-    const { success } = await ratelimit.limit(identifier);
-    if (!success) {
-      return {
-        ok: false,
-        error: 'Too many messages sent. Please wait an hour and try again.',
-      };
-    }
-    return { ok: true };
-  }
-
-  if (process.env.NODE_ENV === 'production') {
-    console.error(
-      'Contact rate limiting is misconfigured: UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN are required in production.',
-    );
-    return {
-      ok: false,
-      error: 'Unable to send your message right now. Please try again later.',
-    };
-  }
-
   if (!checkMemoryLimit(identifier)) {
     return {
       ok: false,

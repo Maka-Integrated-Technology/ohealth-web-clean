@@ -13,7 +13,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - Next.js 16 App Router, React 19, TypeScript, Tailwind v4
 - Single server action: contact form → Resend (`src/app/contact/actions.ts`)
 - Security headers/CSP: `src/proxy.ts` (not `middleware.ts`)
-- Rate limiting: Upstash Redis in production; in-memory fallback in dev only
+- Rate limiting: in-memory only (`src/lib/rate-limit/contact-rate-limit.ts`), 5/hour per IP, per server instance
 
 ## Layout
 
@@ -44,4 +44,4 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ## Env (see `.env.example` + README)
 
-Prod requires `RESEND_*`, `UPSTASH_*`. Never set `E2E` or `CONTACT_MOCK_SEND` in production.
+Prod requires `RESEND_*`. Never set `E2E` or `CONTACT_MOCK_SEND` in production.
