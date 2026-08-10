@@ -89,7 +89,7 @@ See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for development workflow, coding conv
 
 ## Contact form
 
-Submissions from `/contact` use a React 19 server action (`useActionState` + `useFormStatus`) and are sent via [Resend](https://resend.com). Rate limiting uses [Upstash Redis](https://upstash.com).
+Submissions from `/contact` use a React 19 server action (`useActionState` + `useFormStatus`) and are sent via [Resend](https://resend.com). Rate limiting is in-memory (5 submissions per hour per IP), applied per server instance.
 
 Copy `.env.example` to `.env.local` and fill in values:
 
@@ -102,13 +102,11 @@ cp .env.example .env.local
 | `RESEND_API_KEY`                    | Yes             | Resend API key for outbound email                      |
 | `CONTACT_FROM_EMAIL`                | Yes             | Verified sender address in Resend                      |
 | `CONTACT_TO_EMAIL`                  | No              | Inbox override (default: `support@ohealthltd.com`)     |
-| `UPSTASH_REDIS_REST_URL`            | Yes             | Distributed contact-form rate limiting                 |
-| `UPSTASH_REDIS_REST_TOKEN`          | Yes             | Upstash REST token                                     |
 | `NEXT_PUBLIC_SITE_URL`              | Yes             | Canonical URLs, Open Graph, sitemap                    |
 | `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` | No              | Cloudinary tenant override                             |
 | `E2E`                               | Never in prod   | Set by Playwright only; mocks Resend in non-production |
 
-Production builds on Vercel/CI fail fast if Resend, Upstash, or mock/E2E flags are misconfigured.
+Production builds on Vercel/CI fail fast if Resend or mock/E2E flags are misconfigured.
 
 **Full name rule:** accepts mononyms and multi-part names (any script). Each whitespace-separated part must contain at least one letter; values that are too short or digits/symbols only are rejected. See `isValidContactFullName` in `src/lib/contact/contact-message.ts`.
 

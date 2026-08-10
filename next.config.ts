@@ -5,12 +5,7 @@ const shouldValidateEnv =
   (process.env.CI === 'true' || process.env.VERCEL === '1');
 
 if (shouldValidateEnv) {
-  const required = [
-    'RESEND_API_KEY',
-    'CONTACT_FROM_EMAIL',
-    'UPSTASH_REDIS_REST_URL',
-    'UPSTASH_REDIS_REST_TOKEN',
-  ] as const;
+  const required = ['RESEND_API_KEY', 'CONTACT_FROM_EMAIL'] as const;
 
   for (const key of required) {
     if (!process.env[key]?.trim()) {
