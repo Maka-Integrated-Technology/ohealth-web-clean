@@ -1,95 +1,79 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-const limitMock = vi.fn();
-
-vi.mock('@upstash/ratelimit', () => ({
-  Ratelimit: Object.assign(
-    vi.fn().mockImplementation(() => ({
-      limit: limitMock,
-    })),
-    { slidingWindow: vi.fn() },
-  ),
-}));
-
-vi.mock('@upstash/redis', () => ({
-  Redis: vi.fn(),
-}));
-
 describe('assertContactRateLimit', () => {
-  const envSnapshot = { ...process.env };
-
   afterEach(() => {
-    process.env = { ...envSnapshot };
-    limitMock.mockReset();
     vi.resetModules();
-    vi.unstubAllEnvs();
+    vi.useRealTimers();
   });
 
   async function loadRateLimit() {
     return import('@/lib/rate-limit/contact-rate-limit');
   }
 
-  it('fails closed in production when Upstash is not configured', async () => {
-    vi.stubEnv('NODE_ENV', 'production');
-    delete process.env.UPSTASH_REDIS_REST_URL;
-    delete process.env.UPSTASH_REDIS_REST_TOKEN;
-
+  it('allows submissions up to the limit', async () => {
     const { assertContactRateLimit } = await loadRateLimit();
-    const result = await assertContactRateLimit('prod-missing-upstash');
+    const identifier = `under-limit-${Date.now()}`;
 
-    expect(result).toEqual({
-      ok: false,
-      error: 'Unable to send your message right now. Please try again later.',
-    });
+    for (let i = 0; i < 5; i++) {
+      await expect(assertContactRateLimit(identifier)).resolves.toEqual({ ok: true });
+    }
   });
 
-  it('uses Upstash when credentials are present', async () => {
-    vi.stubEnv('NODE_ENV', 'production');
-    process.env.UPSTASH_REDIS_REST_URL = 'https://example.upstash.io';
-    process.env.UPSTASH_REDIS_REST_TOKEN = 'token';
-    limitMock.mockResolvedValue({ success: true });
-
+  it('returns a user-facing error once the limit is exceeded', async () => {
     const { assertContactRateLimit } = await loadRateLimit();
-    const result = await assertContactRateLimit('upstash-ok');
+    const identifier = `over-limit-${Date.now()}`;
 
-    expect(result).toEqual({ ok: true });
-    expect(limitMock).toHaveBeenCalledWith('upstash-ok');
-  });
+    for (let i = 0; i < 5; i++) {
+      await assertContactRateLimit(identifier);
+    }
 
-  it('returns a user-facing error when Upstash denies the request', async () => {
-    process.env.UPSTASH_REDIS_REST_URL = 'https://example.upstash.io';
-    process.env.UPSTASH_REDIS_REST_TOKEN = 'token';
-    limitMock.mockResolvedValue({ success: false });
-
-    const { assertContactRateLimit } = await loadRateLimit();
-    const result = await assertContactRateLimit('upstash-denied');
-
-    expect(result).toEqual({
+    await expect(assertContactRateLimit(identifier)).resolves.toEqual({
       ok: false,
       error: 'Too many messages sent. Please wait an hour and try again.',
     });
   });
 
-  it('falls back to in-memory limiting in E2E mode even with Upstash credentials set', async () => {
-    vi.stubEnv('NODE_ENV', 'development');
-    vi.stubEnv('E2E', 'true');
-    process.env.UPSTASH_REDIS_REST_URL = 'https://example.upstash.io';
-    process.env.UPSTASH_REDIS_REST_TOKEN = 'dummy-token';
-
+  it('tracks identifiers independently', async () => {
     const { assertContactRateLimit } = await loadRateLimit();
-    const identifier = `e2e-${Date.now()}`;
+    const blocked = `blocked-${Date.now()}`;
+    const other = `other-${Date.now()}`;
 
-    await expect(assertContactRateLimit(identifier)).resolves.toEqual({ ok: true });
-    expect(limitMock).not.toHaveBeenCalled();
+    for (let i = 0; i < 5; i++) {
+      await assertContactRateLimit(blocked);
+    }
+
+    await expect(assertContactRateLimit(blocked)).resolves.toEqual({
+      ok: false,
+      error: 'Too many messages sent. Please wait an hour and try again.',
+    });
+    await expect(assertContactRateLimit(other)).resolves.toEqual({ ok: true });
   });
 
-  it('falls back to in-memory limiting in non-production without Upstash', async () => {
-    vi.stubEnv('NODE_ENV', 'development');
-    delete process.env.UPSTASH_REDIS_REST_URL;
-    delete process.env.UPSTASH_REDIS_REST_TOKEN;
+  it('allows submissions again once the window has passed', async () => {
+    vi.useFakeTimers();
 
     const { assertContactRateLimit } = await loadRateLimit();
-    const identifier = `memory-${Date.now()}`;
+    const identifier = 'window-reset';
+
+    for (let i = 0; i < 5; i++) {
+      await assertContactRateLimit(identifier);
+    }
+
+    await expect(assertContactRateLimit(identifier)).resolves.toEqual({
+      ok: false,
+      error: 'Too many messages sent. Please wait an hour and try again.',
+    });
+
+    vi.advanceTimersByTime(60 * 60 * 1000 + 1);
+
+    await expect(assertContactRateLimit(identifier)).resolves.toEqual({ ok: true });
+  });
+
+  it('applies the same limiter in production', async () => {
+    vi.stubEnv('NODE_ENV', 'production');
+
+    const { assertContactRateLimit } = await loadRateLimit();
+    const identifier = `prod-${Date.now()}`;
 
     for (let i = 0; i < 5; i++) {
       await expect(assertContactRateLimit(identifier)).resolves.toEqual({ ok: true });
@@ -99,5 +83,7 @@ describe('assertContactRateLimit', () => {
       ok: false,
       error: 'Too many messages sent. Please wait an hour and try again.',
     });
+
+    vi.unstubAllEnvs();
   });
 });

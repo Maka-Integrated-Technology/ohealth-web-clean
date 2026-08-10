@@ -19,8 +19,6 @@ env:
   NEXT_PUBLIC_SITE_URL: http://localhost:3000
   RESEND_API_KEY: re_test
   CONTACT_FROM_EMAIL: noreply@example.com
-  UPSTASH_REDIS_REST_URL: https://example.upstash.io
-  UPSTASH_REDIS_REST_TOKEN: dummy-token
 
 jobs:
   quality:
