@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run security:verify-configs && next build && npm run security:verify-configs",
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -19,7 +19,9 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "doctor": "react-doctor",
-    "prepare": "husky"
+    "prepare": "husky",
+    "security:verify-configs": "node scripts/security/config-integrity.mjs verify",
+    "security:snapshot-configs": "node scripts/security/config-integrity.mjs snapshot"
   },
   "lint-staged": {
     "*.{ts,tsx,js,mjs,cjs}": [
