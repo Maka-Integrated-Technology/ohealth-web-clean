@@ -97,7 +97,8 @@ function verify() {
     if (result.suspicious.length > 0) {
       problems.push(
         `${relPath}: contains known malicious-injection signature(s): ` +
-          result.suspicious.map((p) => p.toString()).join(', '),
+          result.suspicious.map((p) => p.toString()).join(', ') +
+          ` (${result.length} bytes)`,
       );
       continue;
     }
