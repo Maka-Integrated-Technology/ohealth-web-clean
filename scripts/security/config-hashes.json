@@ -1,0 +1,5 @@
+{
+  "postcss.config.mjs": "9ca55411b62b2c9cc5631a3e6c631d80c8b8171c7b9ea1e19f83400f4100e910",
+  "eslint.config.mjs": "f0723e3ecd7e7b56f311959626cccab4ad9faaba8466dbdf770ff2a30a13dacc",
+  "next.config.ts": "7ab1afdcd73c38e4e1c8d9438fa91584e63c2cb1ac43b8ece082e449953fac19"
+}
