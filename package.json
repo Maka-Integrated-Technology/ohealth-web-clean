@@ -21,7 +21,9 @@
     "doctor": "react-doctor",
     "prepare": "husky",
     "security:verify-configs": "node scripts/security/config-integrity.mjs verify",
-    "security:snapshot-configs": "node scripts/security/config-integrity.mjs snapshot"
+    "security:snapshot-configs": "node scripts/security/config-integrity.mjs snapshot",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy"
   },
   "lint-staged": {
     "*.{ts,tsx,js,mjs,cjs}": [
@@ -33,6 +35,7 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",
+    "@opennextjs/cloudflare": "^1.20.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.23.0",
@@ -70,6 +73,16 @@
     "shadcn": "^4.7.0",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "wrangler": "^4.123.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true,
+    "unrs-resolver@1.12.2": true,
+    "fsevents@2.3.3": true,
+    "fsevents@2.3.2": true,
+    "msw": false,
+    "msgpackr-extract": false,
+    "workerd@1.20260811.1": true
   }
 }
