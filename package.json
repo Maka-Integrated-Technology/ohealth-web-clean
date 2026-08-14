@@ -23,6 +23,7 @@
     "security:verify-configs": "node scripts/security/config-integrity.mjs verify",
     "security:snapshot-configs": "node scripts/security/config-integrity.mjs snapshot",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "cf:build": "opennextjs-cloudflare build",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy"
   },
   "lint-staged": {
