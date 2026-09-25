@@ -4,7 +4,6 @@ on:
   push:
     branches: [dev, staging, main]
   pull_request:
-    branches: [dev, staging, main]
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -31,89 +30,9 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Reject malicious configuration payloads
+      - name: Run supply-chain security scan
         shell: bash
-        run: |
-          set -euo pipefail
-
-          config_files=(
-            postcss.config.mjs
-            eslint.config.mjs
-            next.config.ts
-            tailwind.config.js
-            tailwind.config.ts
-          )
-          known_markers=(
-            'Tgw''(2509)'
-            '_$_''1e42'
-            'rmcej%''otb%'
-            'temp_auto_''push.bat'
-            'temp_interactive_''push.bat'
-            'branch_''structure.json'
-            '0xa322E5f3''D311D3080e6f0121063e9aDC2490Ef1a'
-          )
-
-          for marker in "${known_markers[@]}"; do
-            if match=$(git grep -FIl -- "$marker" -- .); then
-              echo "::error::Known malicious campaign marker detected in $match."
-              exit 1
-            fi
-          done
-
-          for config_file in "${config_files[@]}"; do
-            [[ -f "$config_file" ]] || continue
-
-            if grep -Eq '_0x[[:xdigit:]]{4,}|global\[[^]]+\][[:space:]]*=[[:space:]]*require|String\.fromCharCode\([^)]{100,}|node:child_process|\beval[[:space:]]*\(' "$config_file"; then
-              echo "::error file=$config_file::Obfuscated executable configuration detected."
-              exit 1
-            fi
-          done
-
-          while IFS= read -r -d '' task_file; do
-            if grep -Eq '"runOn"[[:space:]]*:[[:space:]]*"folderOpen"|curl.+\|.+(ba)?sh|powershell' "$task_file"; then
-              echo "::error file=$task_file::Unsafe editor task detected."
-              exit 1
-            fi
-          done < <(git ls-files -z '.vscode/tasks.json' '*/.vscode/tasks.json')
-
-          while IFS= read -r -d '' font_file; do
-            magic=$(od -An -tx1 -N4 "$font_file" | tr -d ' \n')
-            case "$magic" in
-              774f4632|774f4646|4f54544f|00010000) ;;
-              *)
-                echo "::error file=$font_file::Invalid font signature; possible disguised payload."
-                exit 1
-                ;;
-            esac
-          done < <(git ls-files -z '*.woff' '*.woff2' '*.otf' '*.ttf')
-
-          if jq -e '
-            .lockfileVersion != 3 or
-            any(
-              .packages | to_entries[];
-              .key != "" and
-              (.value.resolved // "") != "" and
-              (
-                (.value.resolved | startswith("https://registry.npmjs.org/") | not) or
-                (.value.integrity // "") == ""
-              )
-            )
-          ' package-lock.json >/dev/null; then
-            echo "::error file=package-lock.json::Untrusted dependency source or missing integrity metadata."
-            exit 1
-          fi
-
-          long_line_found=0
-          while IFS= read -r -d '' source_file; do
-            if ! awk 'length($0) > 2000 { print FILENAME ":" FNR; exit 1 }' "$source_file"; then
-              long_line_found=1
-            fi
-          done < <(git ls-files -z '*.js' '*.cjs' '*.mjs' '*.jsx' '*.ts' '*.tsx')
-
-          if [[ "$long_line_found" -ne 0 ]]; then
-            echo "::error::Abnormally long line found in tracked executable source."
-            exit 1
-          fi
+        run: bash scripts/security/supply-chain-scan.sh
 
   quality:
     name: Code Quality & Build
