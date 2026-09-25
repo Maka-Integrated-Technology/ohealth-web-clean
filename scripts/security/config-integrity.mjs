@@ -44,9 +44,9 @@ const SUSPICIOUS_PATTERNS = [
   /_0x[a-f0-9]{4,6}/i,
   /require\(_0x[a-f0-9]+\)/i,
   /\bglobal\['!'\]/,
-  /rmcej%otb%/,
-  /\$_1e42/,
-  /temp_auto_push\.bat/i,
+  new RegExp('rmcej%' + 'otb%'),
+  new RegExp('\\$_' + '1e42'),
+  new RegExp('temp_auto_' + 'push\\.bat', 'i'),
 ];
 
 function sha256(content) {
@@ -63,7 +63,7 @@ function scanFile(relPath) {
   if (!existsSync(absPath)) return null;
   const content = readFileSync(absPath, 'utf8');
   const hash = sha256(content);
-  const suspicious = SUSPICIOUS_PATTERNS.filter((pattern) => pattern.test(content));
+  const suspicious = SUSPICIOUS_PATTERNS.filter(pattern => pattern.test(content));
   return { relPath, hash, suspicious, length: content.length };
 }
 
@@ -97,7 +97,7 @@ function verify() {
     if (result.suspicious.length > 0) {
       problems.push(
         `${relPath}: contains known malicious-injection signature(s): ` +
-          result.suspicious.map((p) => p.toString()).join(', ') +
+          result.suspicious.map(p => p.toString()).join(', ') +
           ` (${result.length} bytes)`,
       );
       continue;
@@ -123,7 +123,7 @@ function verify() {
   }
 
   if (problems.length > 0) {
-    fail(problems.map((p) => `- ${p}`).join('\n'));
+    fail(problems.map(p => `- ${p}`).join('\n'));
   }
 
   console.log(`config-integrity: OK (${WATCHED_FILES.length} watched paths checked)`);
@@ -143,7 +143,9 @@ function snapshot() {
     manifest[relPath] = result.hash;
   }
   writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
-  console.log(`config-integrity: snapshot written to ${path.relative(repoRoot, manifestPath)}`);
+  console.log(
+    `config-integrity: snapshot written to ${path.relative(repoRoot, manifestPath)}`,
+  );
 }
 
 const mode = process.argv[2];
