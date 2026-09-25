@@ -45,6 +45,5 @@ next-env.d.ts
 playwright-report
 test-results
 
-
 # cloudflare
 .open-next/

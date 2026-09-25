@@ -34,7 +34,7 @@ export function isValidContactFullName(fullName: string): boolean {
 
   const parts = trimmed.split(/[\s-]+/).filter(part => part.length > 0);
 
-  if (parts.length < 2) return false;
+  if (parts.length === 0) return false;
 
   return parts.every(part => /\p{L}/u.test(part));
 }
