@@ -1,9 +1,14 @@
 'use client';
 
 import { ArrowRight, Loader2 } from 'lucide-react';
-import { Button } from '../ui/button';
+import { useSyncExternalStore } from 'react';
 import { useFormStatus } from 'react-dom';
+import { Button } from '../ui/button';
 import { ContactCooldownNotice } from './contact-cooldown-notice';
+
+const subscribeToHydration = () => () => undefined;
+const getClientSnapshot = () => true;
+const getServerSnapshot = () => false;
 
 type ContactSubmitButtonProps = {
   isCoolingDown: boolean;
@@ -15,13 +20,22 @@ export function ContactSubmitButton({
   remainingSeconds,
 }: ContactSubmitButtonProps) {
   const { pending } = useFormStatus();
+  const isHydrated = useSyncExternalStore(
+    subscribeToHydration,
+    getClientSnapshot,
+    getServerSnapshot,
+  );
 
   if (isCoolingDown) {
     return <ContactCooldownNotice remainingSeconds={remainingSeconds} />;
   }
 
   return (
-    <Button disabled={pending} type="submit" variant="marketingOnDark" size="form-submit">
+    <Button
+      disabled={pending || !isHydrated}
+      type="submit"
+      variant="marketingOnDark"
+      size="form-submit">
       {pending ? (
         <>
           Sending...
