@@ -34,6 +34,10 @@ jobs:
         shell: bash
         run: bash scripts/security/supply-chain-scan.sh
 
+      - name: Verify supply-chain scanner controls
+        shell: bash
+        run: bash scripts/security/supply-chain-scan.test.sh
+
   quality:
     name: Code Quality & Build
     runs-on: ubuntu-latest
