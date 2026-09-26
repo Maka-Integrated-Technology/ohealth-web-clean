@@ -70,36 +70,48 @@ done < <(git ls-files -z '*.woff' '*.woff2' '*.otf' '*.ttf')
 [[ -f package.json ]] || fail 'package.json is missing.'
 [[ -f package-lock.json ]] || fail 'package-lock.json is missing.'
 
-jq empty package.json package-lock.json >/dev/null ||
-  fail 'package.json or package-lock.json is not valid JSON.'
-
-if jq -e '
-  [.scripts.preinstall, .scripts.install, .scripts.postinstall] |
-  any(. != null and . != "")
+if ! jq -e '
+  type == "object" and
+  (
+    (.scripts // {}) as $scripts |
+    ($scripts | type == "object") and
+    all(
+      [
+        "preinstall",
+        "install",
+        "postinstall",
+        "prepublish",
+        "preprepare",
+        "postprepare",
+        "dependencies"
+      ][];
+      ($scripts[.]? // "") == ""
+    ) and
+    (($scripts.prepare? // "") == "" or $scripts.prepare == "husky")
+  )
 ' package.json >/dev/null; then
-  fail 'Unapproved install lifecycle script detected in package.json.'
+  fail 'package.json is malformed or contains an unapproved install lifecycle script.'
 fi
 
-if jq -e '
-  (.scripts.prepare // "") as $prepare |
-  $prepare != "" and $prepare != "husky"
-' package.json >/dev/null; then
-  fail 'The prepare lifecycle script differs from the reviewed husky command.'
-fi
-
-if jq -e '
-  .lockfileVersion != 3 or
-  any(
+if ! jq -e '
+  type == "object" and
+  .lockfileVersion == 3 and
+  (.packages | type == "object") and
+  (.packages | has("")) and
+  all(
     .packages | to_entries[];
-    .key != "" and
-    (.value.resolved // "") != "" and
-    (
-      (.value.resolved | startswith("https://registry.npmjs.org/") | not) or
-      (.value.integrity // "") == ""
-    )
+    if .key == "" then
+      (.value | type == "object")
+    else
+      (.value | type == "object") and
+      (.value.resolved | type == "string") and
+      (.value.resolved | startswith("https://registry.npmjs.org/")) and
+      (.value.integrity | type == "string") and
+      (.value.integrity | length > 0)
+    end
   )
 ' package-lock.json >/dev/null; then
-  fail 'Untrusted dependency source or missing integrity metadata in package-lock.json.'
+  fail 'package-lock.json is malformed or contains untrusted or incomplete dependency metadata.'
 fi
 
 long_line_found=0
