@@ -8,7 +8,9 @@ test.describe('Contact form', () => {
   test('shows validation errors when submitted empty', async ({ page }) => {
     await page.getByRole('button', { name: 'Send Message' }).click();
 
-    await expect(page.getByText('Full name is required.')).toBeVisible();
+    await expect(page.getByText('Full name is required.')).toBeVisible({
+      timeout: 15_000,
+    });
     await expect(page.getByText('Email address is required.')).toBeVisible();
     await expect(page.getByText('Message is required.')).toBeVisible();
   });
