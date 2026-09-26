@@ -1,14 +1,23 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
+
+async function waitForContactForm(page: Page) {
+  await expect(page.getByRole('button', { name: 'Send Message' })).toBeEnabled({
+    timeout: 15_000,
+  });
+}
 
 test.describe('Contact form', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/contact');
+    await waitForContactForm(page);
   });
 
   test('shows validation errors when submitted empty', async ({ page }) => {
     await page.getByRole('button', { name: 'Send Message' }).click();
 
-    await expect(page.getByText('Full name is required.')).toBeVisible();
+    await expect(page.getByText('Full name is required.')).toBeVisible({
+      timeout: 15_000,
+    });
     await expect(page.getByText('Email address is required.')).toBeVisible();
     await expect(page.getByText('Message is required.')).toBeVisible();
   });
@@ -67,6 +76,7 @@ test.describe('Contact rate limit', () => {
 
   test('shows rate-limit message after repeated submissions', async ({ page }) => {
     await page.goto('/contact');
+    await waitForContactForm(page);
 
     for (let i = 0; i < 5; i++) {
       await page.getByLabel('Full Name').fill('Jane Doe');
@@ -77,6 +87,7 @@ test.describe('Contact rate limit', () => {
         timeout: 15_000,
       });
       await page.reload();
+      await waitForContactForm(page);
     }
 
     await page.getByLabel('Full Name').fill('Jane Doe');
