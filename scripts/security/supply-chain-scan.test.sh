@@ -5,6 +5,16 @@ set -euo pipefail
 readonly REPO_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd)"
 readonly SCANNER="$REPO_ROOT/scripts/security/supply-chain-scan.sh"
 readonly FIXTURE_ROOT="$(mktemp -d)"
+readonly -a C2_TEST_MARKERS=(
+  'eth_getBlock''ByNumber'
+  'publicnode.''com'
+  'drpc.''org'
+  'blastapi.''io'
+  '1rpc.''io'
+  'block''scout'
+  'webhook.''site'
+  'shai-''hulud'
+)
 
 trap 'rm -rf "$FIXTURE_ROOT"' EXIT
 
@@ -83,11 +93,49 @@ expect_fail() {
 clean_fixture=$(create_fixture clean)
 expect_pass "$clean_fixture" 'reviewed package metadata'
 
+hidden_whitespace_fixture=$(create_fixture hidden-whitespace)
+printf 'const visible = true;%40sconst hidden = true;\n' '' \
+  >"$hidden_whitespace_fixture/hidden.ts"
+git -C "$hidden_whitespace_fixture" add hidden.ts
+expect_fail "$hidden_whitespace_fixture" 'hidden whitespace payload'
+
+for index in "${!C2_TEST_MARKERS[@]}"; do
+  c2_fixture=$(create_fixture "c2-$index")
+  printf 'export const endpoint = "%s";\n' "${C2_TEST_MARKERS[$index]}" \
+    >"$c2_fixture/indicator.ts"
+  git -C "$c2_fixture" add indicator.ts
+  expect_fail "$c2_fixture" "campaign marker ${C2_TEST_MARKERS[$index]}"
+done
+
+oversized_config_fixture=$(create_fixture oversized-config)
+for index in {1..300}; do
+  printf 'export const value_%03d = "%040d";\n' "$index" "$index"
+done >"$oversized_config_fixture/oversized.config.mjs"
+git -C "$oversized_config_fixture" add oversized.config.mjs
+expect_fail "$oversized_config_fixture" 'oversized configuration file'
+
+create_require_fixture=$(create_fixture create-require)
+printf 'const loader = createRequire(import.meta.url);\n' \
+  >"$create_require_fixture/loader.config.mjs"
+git -C "$create_require_fixture" add loader.config.mjs
+expect_fail "$create_require_fixture" 'dynamic createRequire configuration'
+
+spawn_fixture=$(create_fixture spawn)
+printf 'spawn("node", ["-e", payload]);\n' >"$spawn_fixture/spawn.config.mjs"
+git -C "$spawn_fixture" add spawn.config.mjs
+expect_fail "$spawn_fixture" 'dynamic spawn configuration'
+
 for hook in preinstall install postinstall prepublish preprepare postprepare dependencies; do
   hook_fixture=$(create_fixture "hook-$hook")
   update_json "$hook_fixture/package.json" ".scripts.${hook} = \"malicious-command\""
   expect_fail "$hook_fixture" "unapproved $hook lifecycle hook"
 done
+
+unreviewed_prepare_fixture=$(create_fixture unreviewed-prepare)
+update_json \
+  "$unreviewed_prepare_fixture/package.json" \
+  '.scripts.prepare = "husky && malicious-command"'
+expect_fail "$unreviewed_prepare_fixture" 'unreviewed prepare lifecycle command'
 
 missing_resolved_fixture=$(create_fixture missing-resolved)
 update_json \
