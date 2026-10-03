@@ -202,6 +202,7 @@ export function FeatureCardCarousel(props: FeatureCardCarouselProps) {
           src={specialty.photoUrl}
           alt={specialty.label}
           fill
+          sizes="(min-width: 1280px) 284px, (min-width: 640px) 45vw, 90vw"
           priority
           className="object-cover transition-transform duration-500"
           style={{
