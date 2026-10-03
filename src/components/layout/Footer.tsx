@@ -23,7 +23,7 @@ function FooterLinkButton({ href, children }: FooterLinkButtonProps) {
         {children}
         <span
           aria-hidden
-          className="absolute -bottom-0.5 left-1/2 h-0.5 w-0 -translate-x-1/2 rounded-full bg-brand-blue transition-all duration-300 ease-out group-hover/footer-link:w-full"
+          className="absolute -bottom-0.5 left-1/2 h-0.5 w-0 -translate-x-1/2 rounded-full bg-brand-blue transition-[width] duration-300 ease-out group-hover/footer-link:w-full"
         />
       </span>
     </Button>
