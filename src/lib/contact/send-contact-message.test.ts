@@ -4,9 +4,11 @@ const sendMock = vi.fn();
 const isContactSendMockedMock = vi.fn();
 
 vi.mock('resend', () => ({
-  Resend: vi.fn().mockImplementation(() => ({
-    emails: { send: sendMock },
-  })),
+  Resend: vi.fn(function ResendMock() {
+    return {
+      emails: { send: sendMock },
+    };
+  }),
 }));
 
 vi.mock('@/lib/contact/is-contact-send-mocked', () => ({

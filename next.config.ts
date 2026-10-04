@@ -1,5 +1,7 @@
 import type { NextConfig } from 'next';
 
+import { buildSecurityHeaders } from './src/lib/security/headers';
+
 const shouldValidateEnv =
   process.env.NODE_ENV === 'production' &&
   (process.env.CI === 'true' || process.env.VERCEL === '1');
@@ -24,6 +26,14 @@ if (shouldValidateEnv) {
 }
 
 const nextConfig: NextConfig = {
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: buildSecurityHeaders(process.env.NODE_ENV === 'production'),
+      },
+    ];
+  },
   images: {
     loader: 'custom',
     loaderFile: './src/lib/cloudinary-loader.ts',
