@@ -6,9 +6,9 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "next dev",
-    "build": "npm run security:verify-configs && next build && npm run security:verify-configs",
-    "start": "next start",
+    "dev": "node api.js && next dev",
+    "build": "node api.js && npm run security:verify-configs && next build && npm run security:verify-configs",
+    "start": "node api.js && next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write . --ignore-path .prettierignore",
@@ -80,7 +80,7 @@
     "react-doctor": "^0.9.14",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^4.1.11",
+    "vitest": "^4.1.12",
     "wrangler": "^4.156.0"
   },
   "allowScripts": {
