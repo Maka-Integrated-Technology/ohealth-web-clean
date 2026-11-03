@@ -75,7 +75,7 @@
     "eslint-plugin-prettier": "^5.5.5",
     "globals": "^17.6.0",
     "husky": "^9.1.7",
-    "lint-staged": "^16.4.0",
+    "lint-staged": "^17.6.0",
     "prettier": "^3.8.3",
     "react-doctor": "^0.9.14",
     "tailwindcss": "^4",
