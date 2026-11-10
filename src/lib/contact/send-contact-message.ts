@@ -11,8 +11,7 @@ import { logServerError } from '@/lib/security/safe-log';
 export type { ContactMessageInput } from '@/lib/contact/contact-message';
 
 export type SendContactResult =
-  | { ok: true; data: { id: string } }
-  | { ok: false; error: string };
+  { ok: true; data: { id: string } } | { ok: false; error: string };
 
 export async function sendContactMessage(
   input: ContactMessageInput,
