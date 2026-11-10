@@ -155,6 +155,43 @@ update_json \
   '.packages["node_modules/example"].resolved = "https://example.invalid/package.tgz"'
 expect_fail "$untrusted_source_fixture" 'untrusted dependency source'
 
+bundled_dependency_fixture=$(create_fixture bundled-dependency)
+update_json \
+  "$bundled_dependency_fixture/package-lock.json" \
+  '.packages["node_modules/example"].bundleDependencies = ["bundled-child"] |
+   .packages["node_modules/example/node_modules/bundled-child"] = {
+     "version": "1.0.0",
+     "inBundle": true
+   }'
+expect_pass "$bundled_dependency_fixture" 'registry-backed bundled dependency'
+
+unreviewed_bundled_dependency_fixture=$(create_fixture unreviewed-bundled-dependency)
+update_json \
+  "$unreviewed_bundled_dependency_fixture/package-lock.json" \
+  '.packages["node_modules/example/node_modules/bundled-child"] = {
+     "version": "1.0.0",
+     "inBundle": true
+   }'
+expect_fail \
+  "$unreviewed_bundled_dependency_fixture" \
+  'bundled dependency missing its owner declaration'
+
+externally_resolved_bundled_dependency_fixture=$(
+  create_fixture externally-resolved-bundled-dependency
+)
+update_json \
+  "$externally_resolved_bundled_dependency_fixture/package-lock.json" \
+  '.packages["node_modules/example"].bundleDependencies = ["bundled-child"] |
+   .packages["node_modules/example/node_modules/bundled-child"] = {
+     "version": "1.0.0",
+     "inBundle": true,
+     "resolved": "https://example.invalid/bundled-child.tgz",
+     "integrity": "sha512-untrusted"
+   }'
+expect_fail \
+  "$externally_resolved_bundled_dependency_fixture" \
+  'bundled dependency with an external source'
+
 missing_packages_fixture=$(create_fixture missing-packages)
 update_json "$missing_packages_fixture/package-lock.json" 'del(.packages)'
 expect_fail "$missing_packages_fixture" 'missing packages object'
