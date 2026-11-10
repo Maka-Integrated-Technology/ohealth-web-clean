@@ -114,22 +114,42 @@ if ! jq -e '
 fi
 
 if ! jq -e '
+  def trusted_registry_package:
+    type == "object" and
+    (.resolved | type == "string") and
+    (.resolved | startswith("https://registry.npmjs.org/")) and
+    (.integrity | type == "string") and
+    (.integrity | length > 0);
+
+  def trusted_bundled_package($packages; $entry):
+    ($entry.key | split("/node_modules/")) as $path_parts |
+    ($path_parts | length) > 1 and
+    ($path_parts[-1]) as $dependency_name |
+    ($path_parts[0:-1] | join("/node_modules/")) as $owner_key |
+    ($packages[$owner_key] // null) as $owner |
+    ($entry.value | type == "object") and
+    $entry.value.inBundle == true and
+    ($entry.value.version | type == "string") and
+    ($entry.value | has("resolved") | not) and
+    ($entry.value | has("integrity") | not) and
+    ($owner | trusted_registry_package) and
+    ($owner.bundleDependencies | type == "array") and
+    ($owner.bundleDependencies | index($dependency_name) != null);
+
   type == "object" and
   .lockfileVersion == 3 and
   (.packages | type == "object") and
   (.packages | has("")) and
+  (.packages as $packages |
   all(
-    .packages | to_entries[];
+    $packages | to_entries[];
     if .key == "" then
       (.value | type == "object")
     else
-      (.value | type == "object") and
-      (.value.resolved | type == "string") and
-      (.value.resolved | startswith("https://registry.npmjs.org/")) and
-      (.value.integrity | type == "string") and
-      (.value.integrity | length > 0)
+      (.value | trusted_registry_package) or
+      trusted_bundled_package($packages; .)
     end
-  )
+  ))
 ' package-lock.json >/dev/null; then
   fail 'package-lock.json is malformed or contains untrusted or incomplete dependency metadata.'
 fi
