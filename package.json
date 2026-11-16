@@ -86,7 +86,7 @@
     "react-doctor": "^0.9.22",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^4.1.12",
+    "vitest": "^5.1.0",
     "wrangler": "^4.158.0"
   },
   "allowScripts": {
